@@ -2,13 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { NameAnalysisCalculator } from '@/lib/name/calculator'
 import { TianjiPointsService, AnalysisRecordsService, NameAnalysisService } from '@/lib/database/services'
-import OpenAI from 'openai'
+import { ai, AI_MODEL } from '@/lib/ai'
 
-// 初始化DeepSeek客户端
-const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY
-})
+
 
 interface NameAnalyzeRequest {
   name: string
@@ -24,7 +20,7 @@ export async function POST(request: NextRequest) {
     // 验证用户认证
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json(
         { error: '用户未认证' },
@@ -45,10 +41,10 @@ export async function POST(request: NextRequest) {
     // 检查用户天机点余额
     const serviceCost = 120 // 姓名分析消耗120天机点
     const hasEnoughPoints = await TianjiPointsService.hasEnoughPoints(user.id, serviceCost)
-    
+
     if (!hasEnoughPoints) {
       return NextResponse.json(
-        { 
+        {
           error: '天机点余额不足',
           required_points: serviceCost,
           service_type: 'name'
@@ -110,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     // 保存到姓名分析表
     const savedAnalysis = await NameAnalysisService.saveAnalysis(analysisData)
-    
+
     if (!savedAnalysis) {
       console.error('Failed to save name analysis to database')
       // 不影响返回结果，但记录错误
@@ -153,7 +149,7 @@ export async function POST(request: NextRequest) {
       }
 
       const historyRecord = await AnalysisRecordsService.saveRecord(historyData)
-      
+
       if (!historyRecord) {
         console.error('Failed to save analysis to history records')
       }
@@ -186,9 +182,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Name analysis error:', error)
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: error instanceof Error ? error.message : '姓名分析失败，请稍后重试' 
+        error: error instanceof Error ? error.message : '姓名分析失败，请稍后重试'
       },
       { status: 500 }
     )
@@ -257,18 +253,18 @@ ${analysis.suggestions.weaknesses.join('、') || '暂无明显不足'}
 - 字数控制在600-1000字
 - 条理清晰，层次分明`
 
-    const completion = await openai.chat.completions.create({
+    const completion = await ai.chat.completions.create({
       messages: [
         {
           role: "system",
           content: "你是一位专业的姓名学分析师，精通中华传统姓名学理论，包括五行、数理、音韵等方面。你的分析客观准确，既有深厚的文化底蕴，又结合现代实际需求，为人们提供实用的姓名指导。"
         },
         {
-          role: "user", 
+          role: "user",
           content: prompt
         }
       ],
-      model: "deepseek-chat",
+      model: AI_MODEL,
       temperature: 0.7,
       max_tokens: 1500
     })

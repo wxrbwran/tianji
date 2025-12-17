@@ -2,13 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { BuguaCalculator, BuguaQuestion } from '@/lib/bugua/calculator'
 import { TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import OpenAI from 'openai'
+import { ai, AI_MODEL } from '@/lib/ai'
 
-// 初始化DeepSeek客户端
-const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY
-})
+
 
 interface BuguaAnalyzeRequest {
   question: string
@@ -23,7 +19,7 @@ export async function POST(request: NextRequest) {
     // 验证用户认证
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json(
         { error: '用户未认证' },
@@ -52,12 +48,12 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         )
       }
-      
+
       // 验证每次投币结果（0-3个正面）
-      const isValidCoins = body.coin_results.every(result => 
+      const isValidCoins = body.coin_results.every(result =>
         Number.isInteger(result) && result >= 0 && result <= 3
       )
-      
+
       if (!isValidCoins) {
         return NextResponse.json(
           { error: '投币结果必须是0-3之间的整数' },
@@ -69,10 +65,10 @@ export async function POST(request: NextRequest) {
     // 检查用户天机点余额
     const serviceCost = 150 // 卜卦分析消耗150天机点
     const hasEnoughPoints = await TianjiPointsService.hasEnoughPoints(user.id, serviceCost)
-    
+
     if (!hasEnoughPoints) {
       return NextResponse.json(
-        { 
+        {
           error: '天机点余额不足',
           required_points: serviceCost,
           service_type: 'bugua'
@@ -101,12 +97,12 @@ export async function POST(request: NextRequest) {
 
     // 先扣除天机点
     const pointsDeducted = await TianjiPointsService.spendPoints(
-      user.id, 
-      serviceCost, 
-      'bugua', 
+      user.id,
+      serviceCost,
+      'bugua',
       `卜卦占卜：${body.question}`
     )
-    
+
     if (!pointsDeducted) {
       return NextResponse.json(
         { error: '天机点扣除失败' },
@@ -118,14 +114,14 @@ export async function POST(request: NextRequest) {
     const categoryMap = {
       'career': '事业工作',
       'love': '感情婚姻',
-      'wealth': '财运投资', 
+      'wealth': '财运投资',
       'health': '健康身体',
       'study': '学习考试',
       'family': '家庭关系',
       'travel': '出行旅游',
       'other': '其他事务'
     }
-    
+
     const title = `${categoryMap[body.category]} - ${body.question}`
     const summary = `${buguaResult.hexagram.name}，${buguaResult.hexagram.fortune}。综合评分${buguaResult.scores.overall_score}分。${buguaResult.interpretation.advice}`
 
@@ -171,9 +167,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Bugua analysis error:', error)
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: error instanceof Error ? error.message : '卜卦分析失败，请稍后重试' 
+        error: error instanceof Error ? error.message : '卜卦分析失败，请稍后重试'
       },
       { status: 500 }
     )
@@ -185,7 +181,7 @@ async function generateAIAnalysis(question: BuguaQuestion, result: any): Promise
     const categoryMap = {
       career: '事业工作',
       love: '感情婚姻',
-      wealth: '财运投资', 
+      wealth: '财运投资',
       health: '健康身体',
       study: '学习考试',
       family: '家庭关系',
@@ -195,7 +191,7 @@ async function generateAIAnalysis(question: BuguaQuestion, result: any): Promise
 
     const urgencyMap = {
       high: '紧急重要',
-      medium: '一般重要', 
+      medium: '一般重要',
       low: '不太紧急'
     }
 
@@ -239,18 +235,18 @@ async function generateAIAnalysis(question: BuguaQuestion, result: any): Promise
 - 字数控制在600-1000字
 - 条理清晰，逻辑严密`
 
-    const completion = await openai.chat.completions.create({
+    const completion = await ai.chat.completions.create({
       messages: [
         {
           role: "system",
           content: "你是一位专业的易经卜卦分析师，精通六十四卦的含义和应用。你的分析基于传统易经智慧，同时结合现代实际情况，为咨询者提供实用的人生指导。"
         },
         {
-          role: "user", 
+          role: "user",
           content: prompt
         }
       ],
-      model: "deepseek-chat",
+      model: AI_MODEL,
       temperature: 0.7,
       max_tokens: 1500
     })

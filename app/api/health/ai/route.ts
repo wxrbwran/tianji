@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { validateEnvironment } from '@/lib/api/error-handler'
-import OpenAI from 'openai'
+import { ai, AI_MODEL } from '@/lib/ai'
 
 export async function GET() {
   try {
@@ -14,13 +14,10 @@ export async function GET() {
     }
 
     // 测试 DeepSeek API 连接
-    const openai = new OpenAI({
-      baseURL: 'https://api.deepseek.com',
-      apiKey: process.env.DEEPSEEK_API_KEY!
-    })
 
-    const testCompletion = await openai.chat.completions.create({
-      model: 'deepseek-chat',
+
+    const testCompletion = await ai.chat.completions.create({
+      model: AI_MODEL,
       messages: [{ role: 'user', content: 'Hello, respond with "OK" if you can hear me.' }],
       max_tokens: 10,
       temperature: 0

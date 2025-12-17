@@ -2,13 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { DreamAnalysisCalculator, DreamAnalysisInput, DreamCategory, DreamMood } from '@/lib/dream/calculator'
 import { TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import OpenAI from 'openai'
+import { ai, AI_MODEL } from '@/lib/ai'
 
-// 初始化DeepSeek客户端
-const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY
-})
+
 
 interface DreamInterpreteRequest extends DreamAnalysisInput {
   // 继承所有DreamAnalysisInput字段
@@ -19,7 +15,7 @@ export async function POST(request: NextRequest) {
     // 验证用户认证
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json(
         { error: '用户未认证' },
@@ -54,10 +50,10 @@ export async function POST(request: NextRequest) {
     // 检查用户天机点余额
     const serviceCost = 80 // 解梦分析消耗80天机点
     const hasEnoughPoints = await TianjiPointsService.hasEnoughPoints(user.id, serviceCost)
-    
+
     if (!hasEnoughPoints) {
       return NextResponse.json(
-        { 
+        {
           error: '天机点余额不足',
           required_points: serviceCost,
           service_type: 'dream'
@@ -101,7 +97,7 @@ export async function POST(request: NextRequest) {
 
     // 生成AI深度解读
     const aiInterpretation = await generateAIInterpretation(body, dreamAnalysis)
-    
+
     // 临时调试日志
     console.log('🔍 API Debug - aiInterpretation type:', typeof aiInterpretation)
     console.log('🔍 API Debug - aiInterpretation preview:', typeof aiInterpretation === 'string' ? aiInterpretation.substring(0, 200) : 'NOT STRING')
@@ -139,8 +135,8 @@ export async function POST(request: NextRequest) {
       // 扣除天机点
       if (!saveError) {
         await TianjiPointsService.spendPoints(
-          user.id, 
-          cost, 
+          user.id,
+          cost,
           'dream_interpretation',
           `梦境解析 - ${body.dream_content.substring(0, 30)}${body.dream_content.length > 30 ? '...' : ''}`
         )
@@ -177,9 +173,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Dream interpretation error:', error)
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: error instanceof Error ? error.message : '梦境解析失败，请稍后重试' 
+        error: error instanceof Error ? error.message : '梦境解析失败，请稍后重试'
       },
       { status: 500 }
     )
@@ -218,9 +214,9 @@ ${stressInfo}
 - 压力指标：${analysis.psychological_analysis.stress_indicators.join('、') || '无明显压力指标'}
 
 象征解析：
-${analysis.symbolic_interpretation.key_symbols.map((symbol: any) => 
-  `- ${symbol.symbol}：${symbol.traditional_meaning}（${symbol.psychological_meaning}）`
-).join('\n')}
+${analysis.symbolic_interpretation.key_symbols.map((symbol: any) =>
+      `- ${symbol.symbol}：${symbol.traditional_meaning}（${symbol.psychological_meaning}）`
+    ).join('\n')}
 
 生活指导：
 - 当前洞察：${analysis.life_guidance.current_situation_insights.join('、')}
@@ -248,18 +244,18 @@ ${analysis.symbolic_interpretation.key_symbols.map((symbol: any) =>
 - 字数控制在800-1200字
 - 条理清晰，具有指导价值`
 
-    const completion = await openai.chat.completions.create({
+    const completion = await ai.chat.completions.create({
       messages: [
         {
           role: "system",
           content: "你是一位经验丰富的心理分析师和解梦专家，结合现代心理学理论与传统解梦文化，为人们提供专业的梦境解读和人生指导。你的解读既有科学依据又富有人文关怀，帮助人们更好地理解内心世界并改善生活。"
         },
         {
-          role: "user", 
+          role: "user",
           content: prompt
         }
       ],
-      model: "deepseek-chat",
+      model: AI_MODEL,
       temperature: 0.7,
       max_tokens: 1800
     })

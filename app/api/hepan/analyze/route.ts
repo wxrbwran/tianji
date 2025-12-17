@@ -2,13 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { HepanCalculator, HepanPerson } from '@/lib/hepan/calculator'
 import { HepanAnalysisService, TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import OpenAI from 'openai'
+import { ai, AI_MODEL } from '@/lib/ai'
 
-// 初始化DeepSeek客户端
-const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY
-})
+
 
 interface HepanAnalyzeRequest {
   person1: {
@@ -33,7 +29,7 @@ export async function POST(request: NextRequest) {
     // 验证用户认证
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json(
         { error: '用户未认证' },
@@ -87,10 +83,10 @@ export async function POST(request: NextRequest) {
     // 检查用户天机点余额
     const serviceCost = 300 // 合盘分析消耗300天机点
     const hasEnoughPoints = await TianjiPointsService.hasEnoughPoints(user.id, serviceCost)
-    
+
     if (!hasEnoughPoints) {
       return NextResponse.json(
-        { 
+        {
           error: '天机点余额不足',
           required_points: serviceCost,
           service_type: 'hepan'
@@ -107,12 +103,12 @@ export async function POST(request: NextRequest) {
 
     // 先扣除天机点
     const pointsDeducted = await TianjiPointsService.spendPoints(
-      user.id, 
-      serviceCost, 
-      'hepan', 
+      user.id,
+      serviceCost,
+      'hepan',
       `合盘分析：${person1.name} & ${person2.name}`
     )
-    
+
     if (!pointsDeducted) {
       return NextResponse.json(
         { error: '天机点扣除失败' },
@@ -146,7 +142,7 @@ export async function POST(request: NextRequest) {
       'family': '亲属',
       'other': '其他'
     }
-    
+
     const relationshipText = body.relationship_type ? relationshipMap[body.relationship_type] : '情侣'
     const title = `${body.person1.name}与${body.person2.name}的${relationshipText}合盘`
     const summary = `配对度${hepanResult.compatibility.overall_score}分。${hepanResult.analysis.strengths[0] || '相配程度良好'}，建议${hepanResult.analysis.suggestions[0] || '保持良好沟通'}。`
@@ -208,9 +204,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Hepan analysis error:', error)
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: error instanceof Error ? error.message : '分析失败，请稍后重试' 
+        error: error instanceof Error ? error.message : '分析失败，请稍后重试'
       },
       { status: 500 }
     )
@@ -256,18 +252,18 @@ ${person2.name}（${person2.gender === 'male' ? '男' : '女'}）：${person2.bi
 - 字数控制在800-1200字
 - 语言流畅，条理清晰`
 
-    const completion = await openai.chat.completions.create({
+    const completion = await ai.chat.completions.create({
       messages: [
         {
           role: "system",
           content: "你是一位经验丰富的命理分析师，擅长八字合盘分析。你的分析客观准确，既指出优势也提醒挑战，重点是给出建设性的建议帮助改善关系。"
         },
         {
-          role: "user", 
+          role: "user",
           content: prompt
         }
       ],
-      model: "deepseek-chat",
+      model: AI_MODEL,
       temperature: 0.7,
       max_tokens: 2000
     })

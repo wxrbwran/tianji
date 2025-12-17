@@ -3,17 +3,14 @@ import { createClient } from '@/lib/supabase/server'
 import { BaziCalculator } from '@/lib/bazi/calculator'
 import { BaziAnalysisService, TianjiPointsService } from '@/lib/database/services'
 import { handleApiError, validateEnvironment } from '@/lib/api/error-handler'
-import OpenAI from 'openai'
+import { ai, AI_MODEL } from '@/lib/ai'
 
 // DeepSeek AI client - 检查环境变量
 if (!validateEnvironment()) {
   console.error('Environment validation failed for DEEPSEEK_API_KEY')
 }
 
-const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY!
-})
+
 
 interface BaziAnalyzeRequest {
   name: string
@@ -30,7 +27,7 @@ export async function POST(request: NextRequest) {
     // 验证用户认证
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json(
         { error: '用户未认证' },
@@ -40,11 +37,11 @@ export async function POST(request: NextRequest) {
 
     // 解析请求体
     const body: BaziAnalyzeRequest = await request.json()
-    
+
     // 验证必要字段
     const requiredFields: Array<keyof BaziAnalyzeRequest> = ['name', 'birth_date', 'birth_time', 'birth_city']
     const missingFields = requiredFields.filter(field => !body[field])
-    
+
     if (missingFields.length > 0) {
       return NextResponse.json(
         { error: `缺少必要字段: ${missingFields.join(', ')}` },
@@ -73,10 +70,10 @@ export async function POST(request: NextRequest) {
     // 检查用户天机点余额
     const serviceCost = 200 // 八字分析消耗200天机点
     const hasEnoughPoints = await TianjiPointsService.hasEnoughPoints(user.id, serviceCost)
-    
+
     if (!hasEnoughPoints) {
       return NextResponse.json(
-        { 
+        {
           error: '天机点余额不足',
           required_points: serviceCost,
           service_type: 'bazi'
@@ -96,17 +93,17 @@ export async function POST(request: NextRequest) {
 
     // 计算真太阳时
     const solarTime = BaziCalculator.calculateSolarTime(fullBirthTime, longitude)
-    
+
     // 生成八字
     const baziChart = BaziCalculator.generateBazi(solarTime)
-    
+
     // 分析五行
     const wuxingAnalysis = BaziCalculator.analyzeWuXing(baziChart)
-    
+
     // 计算大运
     const gender = body.gender || 'male'
     const dayunPeriods = BaziCalculator.calculateDayun(baziChart, birthDate, gender)
-    
+
     // 确定用神
     const yongshen = BaziCalculator.determinYongshen(wuxingAnalysis, baziChart.day_ganzhi[0])
 
@@ -130,11 +127,11 @@ export async function POST(request: NextRequest) {
 时柱（子女宫）：${baziChart.hour_ganzhi}
 
 【五行力量分布】
-木：${wuxingAnalysis.wood}个 (${((wuxingAnalysis.wood/8)*100).toFixed(1)}%)
-火：${wuxingAnalysis.fire}个 (${((wuxingAnalysis.fire/8)*100).toFixed(1)}%)
-土：${wuxingAnalysis.earth}个 (${((wuxingAnalysis.earth/8)*100).toFixed(1)}%)
-金：${wuxingAnalysis.metal}个 (${((wuxingAnalysis.metal/8)*100).toFixed(1)}%)
-水：${wuxingAnalysis.water}个 (${((wuxingAnalysis.water/8)*100).toFixed(1)}%)
+木：${wuxingAnalysis.wood}个 (${((wuxingAnalysis.wood / 8) * 100).toFixed(1)}%)
+火：${wuxingAnalysis.fire}个 (${((wuxingAnalysis.fire / 8) * 100).toFixed(1)}%)
+土：${wuxingAnalysis.earth}个 (${((wuxingAnalysis.earth / 8) * 100).toFixed(1)}%)
+金：${wuxingAnalysis.metal}个 (${((wuxingAnalysis.metal / 8) * 100).toFixed(1)}%)
+水：${wuxingAnalysis.water}个 (${((wuxingAnalysis.water / 8) * 100).toFixed(1)}%)
 
 五行格局：最强为${wuxingAnalysis.strongest}，最弱为${wuxingAnalysis.weakest}
 用神喜忌：用神为${yongshen}
@@ -165,8 +162,8 @@ export async function POST(request: NextRequest) {
 请以详细的文本格式返回分析结果，每个维度单独成段，用【】标注维度标题。
 `
 
-      const completion = await openai.chat.completions.create({
-        model: 'deepseek-chat',
+      const completion = await ai.chat.completions.create({
+        model: AI_MODEL,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 6000
@@ -184,12 +181,12 @@ export async function POST(request: NextRequest) {
 
     // 先扣除天机点
     const pointsDeducted = await TianjiPointsService.spendPoints(
-      user.id, 
-      serviceCost, 
-      'bazi', 
+      user.id,
+      serviceCost,
+      'bazi',
       `八字分析：${body.name}`
     )
-    
+
     if (!pointsDeducted) {
       return NextResponse.json(
         { error: '天机点扣除失败' },
