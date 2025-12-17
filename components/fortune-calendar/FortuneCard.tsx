@@ -35,13 +35,13 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
   }
 
   const fortuneLevel = FORTUNE_LEVELS[fortune.level]
-  
+
   const getScoreIcon = (score: number) => {
     if (score >= 70) return <TrendingUp className="h-4 w-4 text-red-600" />
     if (score >= 40) return <Minus className="h-4 w-4 text-amber-700" />
     return <TrendingDown className="h-4 w-4 text-gray-800" />
   }
-  
+
   const getScoreColor = (score: number) => {
     if (score >= 70) return 'text-red-600'
     if (score >= 40) return 'text-amber-700'
@@ -66,7 +66,7 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
             </Badge>
           </div>
         </div>
-        
+
         {/* 总分显示 */}
         <div className="flex items-center space-x-4">
           <div className="text-center">
@@ -80,7 +80,7 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* 各项运势评分 */}
         <div>
@@ -98,7 +98,7 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
                 {getScoreIcon(fortune.categories.wealth)}
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-background/50">
               <div className="flex items-center space-x-2">
                 <Heart className="h-4 w-4 text-red-600" />
@@ -111,7 +111,7 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
                 {getScoreIcon(fortune.categories.love)}
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-background/50">
               <div className="flex items-center space-x-2">
                 <Briefcase className="h-4 w-4 text-gray-700" />
@@ -124,7 +124,7 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
                 {getScoreIcon(fortune.categories.career)}
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-background/50">
               <div className="flex items-center space-x-2">
                 <Activity className="h-4 w-4 text-amber-700" />
@@ -139,9 +139,9 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
             </div>
           </div>
         </div>
-        
+
         <Separator />
-        
+
         {/* 幸运要素 */}
         <div>
           <h4 className="font-semibold mb-3 text-sm">幸运要素</h4>
@@ -160,9 +160,9 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
             </div>
           </div>
         </div>
-        
+
         <Separator />
-        
+
         {/* 活动建议 */}
         <div>
           <h4 className="font-semibold mb-3 text-sm">活动建议</h4>
@@ -171,9 +171,9 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
               <div className="text-xs text-muted-foreground mb-2">✅ 适宜活动</div>
               <div className="flex flex-wrap gap-2">
                 {fortune.suitableActivities.map((activity, index) => (
-                  <Badge 
-                    key={index} 
-                    variant="secondary" 
+                  <Badge
+                    key={index}
+                    variant="secondary"
                     className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300"
                   >
                     {activity}
@@ -181,15 +181,15 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
                 ))}
               </div>
             </div>
-            
+
             {fortune.avoidActivities.length > 0 && (
               <div>
                 <div className="text-xs text-muted-foreground mb-2">❌ 避免活动</div>
                 <div className="flex flex-wrap gap-2">
                   {fortune.avoidActivities.map((activity, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="secondary" 
+                    <Badge
+                      key={index}
+                      variant="secondary"
                       className="text-xs bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300"
                     >
                       {activity}
@@ -200,9 +200,9 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
             )}
           </div>
         </div>
-        
+
         <Separator />
-        
+
         {/* 详细建议 */}
         <div>
           <h4 className="font-semibold mb-3 text-sm">今日建议</h4>
@@ -210,11 +210,11 @@ export function FortuneCard({ fortune, selectedDate }: FortuneCardProps) {
             {fortune.advice}
           </div>
         </div>
-        
+
         {fortune.avoid && (
           <div>
             <h4 className="font-semibold mb-3 text-sm text-red-600">注意事项</h4>
-            <div className="text-sm text-red-600 leading-relaxed bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
+            <div className="text-sm text-red-600 leading-relaxed dark:bg-red-900/20 p-3 rounded-lg">
               {fortune.avoid}
             </div>
           </div>
