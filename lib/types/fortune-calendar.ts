@@ -36,7 +36,7 @@ export const FORTUNE_LEVELS = {
   excellent: {
     color: 'bg-red-600',
     textColor: 'text-red-600',
-    bgColor: '',
+    bgColor: 'bg-red-500',
     borderColor: 'border-red-400',
     label: '大吉',
     emoji: '🔴'
