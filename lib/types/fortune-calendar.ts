@@ -42,7 +42,7 @@ export const FORTUNE_LEVELS = {
     emoji: '🔴'
   },
   good: {
-    color: 'bg-emerald-700', 
+    color: 'bg-emerald-700',
     textColor: 'text-emerald-700',
     bgColor: 'bg-emerald-50',
     borderColor: 'border-emerald-400',
@@ -51,8 +51,8 @@ export const FORTUNE_LEVELS = {
   },
   average: {
     color: 'bg-amber-700',
-    textColor: 'text-amber-700', 
-    bgColor: 'bg-amber-50',
+    textColor: 'text-amber-700',
+    bgColor: '',
     borderColor: 'border-amber-400',
     label: '平',
     emoji: '🟤'
@@ -60,7 +60,7 @@ export const FORTUNE_LEVELS = {
   poor: {
     color: 'bg-gray-800',
     textColor: 'text-gray-800',
-    bgColor: 'bg-gray-50', 
+    bgColor: 'bg-gray-50',
     borderColor: 'border-gray-400',
     label: '谨慎',
     emoji: '⚫'

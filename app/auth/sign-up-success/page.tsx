@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center p-6">
+    <div className="min-h-screen from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
@@ -65,7 +65,7 @@ export default function Page() {
                   立即登录体验
                 </Button>
               </Link>
-              
+
               <Link href="/" className="w-full">
                 <Button variant="outline" className="w-full">
                   返回首页

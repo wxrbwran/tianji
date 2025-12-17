@@ -167,12 +167,12 @@ export default function HepanPage() {
   // 保存合盘报告
   const handleSaveReport = async () => {
     if (!result) return
-    
+
     setIsSaving(true)
     try {
       // 生成报告内容
       const reportContent = generateHepanReportContent(result)
-      
+
       // 创建并下载文件
       const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' })
       const url = URL.createObjectURL(blob)
@@ -194,12 +194,12 @@ export default function HepanPage() {
   // 分享合盘结果
   const handleShareResult = async () => {
     if (!result) return
-    
+
     setIsSharing(true)
     try {
       // 生成分享图片
       const shareImageBlob = await generateHepanShareImage(result)
-      
+
       if (shareImageBlob) {
         // 创建图片URL用于页面显示
         const imageUrl = URL.createObjectURL(shareImageBlob)
@@ -301,7 +301,7 @@ ${data.ai_analysis}
       gradient.addColorStop(0, '#fdf2f8')
       gradient.addColorStop(0.5, '#fce7f3')
       gradient.addColorStop(1, '#fbcfe8')
-      
+
       ctx.fillStyle = gradient
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -309,20 +309,20 @@ ${data.ai_analysis}
       ctx.fillStyle = '#be185d'
       ctx.font = 'bold 48px serif'
       ctx.textAlign = 'center'
-      
+
       // 标题
       ctx.fillText('💕 合盘配对分析', canvas.width / 2, 100)
-      
+
       // 配对信息
       ctx.font = '32px serif'
       ctx.fillStyle = '#831843'
       ctx.fillText(`${data.person1.name} & ${data.person2.name}`, canvas.width / 2, 180)
-      
+
       // 综合评分
       ctx.font = 'bold 120px serif'
       ctx.fillStyle = '#be185d'
       ctx.fillText(`${data.compatibility.overall_score}`, canvas.width / 2, 350)
-      
+
       ctx.font = '24px serif'
       ctx.fillStyle = '#9d174d'
       ctx.fillText('综合匹配度', canvas.width / 2, 390)
@@ -342,11 +342,11 @@ ${data.ai_analysis}
         ctx.fillStyle = '#9d174d'
         ctx.textAlign = 'left'
         ctx.fillText(score.label, 80, yPos)
-        
+
         ctx.fillStyle = '#be185d'
         ctx.textAlign = 'right'
         ctx.fillText(`${score.value}分`, canvas.width - 80, yPos)
-        
+
         yPos += 50
       })
 
@@ -364,7 +364,7 @@ ${data.ai_analysis}
         const text = data.analysis.strengths[i]
         const maxWidth = canvas.width - 120
         const lines = wrapText(ctx, text, maxWidth)
-        
+
         lines.forEach((line, lineIndex) => {
           ctx.fillText(`${i === 0 && lineIndex === 0 ? '• ' : '  '}${line}`, 60, 850 + i * 80 + lineIndex * 25)
         })
@@ -396,7 +396,7 @@ ${data.ai_analysis}
     for (const char of words) {
       const testLine = currentLine + char
       const metrics = ctx.measureText(testLine)
-      
+
       if (metrics.width > maxWidth && currentLine !== '') {
         lines.push(currentLine)
         currentLine = char
@@ -404,11 +404,11 @@ ${data.ai_analysis}
         currentLine = testLine
       }
     }
-    
+
     if (currentLine) {
       lines.push(currentLine)
     }
-    
+
     return lines
   }
 
@@ -422,7 +422,7 @@ ${data.ai_analysis}
 
   const handleDownloadImage = () => {
     if (!shareImageUrl) return
-    
+
     const a = document.createElement('a')
     a.href = shareImageUrl
     a.download = `合盘分析_${result?.person1.name}_${result?.person2.name}_${new Date().toLocaleDateString()}.png`
@@ -432,14 +432,7 @@ ${data.ai_analysis}
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      background: `linear-gradient(45deg, 
-        #fef7ed 0%, 
-        #fef3e2 25%, 
-        #fdf2f8 50%, 
-        #fef7ed 75%, 
-        #fef3e2 100%)`
-    }}>
+    <div className="min-h-screen relative overflow-hidden">
       {/* 宋代美学背景装饰 */}
       <div className="absolute inset-0 opacity-40 dark:opacity-20">
         <div className="absolute top-32 left-32 w-32 h-32 border-2 border-slate-300 dark:border-slate-600 rounded-full opacity-50"></div>
@@ -447,7 +440,7 @@ ${data.ai_analysis}
         <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-slate-300 dark:bg-slate-600 rounded-full opacity-40"></div>
         <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-amber-400 dark:bg-amber-600 rounded-full opacity-50"></div>
       </div>
-      
+
       <div className="relative z-10">
         {/* Navigation */}
         <nav className="border-b border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
@@ -510,12 +503,12 @@ ${data.ai_analysis}
                           id="person1-name"
                           placeholder="请输入姓名"
                           value={person1.name}
-                          onChange={(e) => setPerson1({...person1, name: e.target.value})}
+                          onChange={(e) => setPerson1({ ...person1, name: e.target.value })}
                         />
                       </div>
                       <div>
                         <Label htmlFor="person1-gender">性别 *</Label>
-                        <Select value={person1.gender} onValueChange={(value: 'male' | 'female') => setPerson1({...person1, gender: value})}>
+                        <Select value={person1.gender} onValueChange={(value: 'male' | 'female') => setPerson1({ ...person1, gender: value })}>
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -531,7 +524,7 @@ ${data.ai_analysis}
                       <DateSelector
                         label="出生日期"
                         value={person1.birth_date}
-                        onChange={(value) => setPerson1({...person1, birth_date: value})}
+                        onChange={(value) => setPerson1({ ...person1, birth_date: value })}
                         required
                       />
                     </div>
@@ -540,7 +533,7 @@ ${data.ai_analysis}
                       <TimeSelector
                         label="出生时间"
                         value={person1.birth_time}
-                        onChange={(value) => setPerson1({...person1, birth_time: value})}
+                        onChange={(value) => setPerson1({ ...person1, birth_time: value })}
                         required
                       />
                     </div>
@@ -549,7 +542,7 @@ ${data.ai_analysis}
                       <CitySelector
                         label="出生城市"
                         value={person1.birth_city}
-                        onChange={(value) => setPerson1({...person1, birth_city: value})}
+                        onChange={(value) => setPerson1({ ...person1, birth_city: value })}
                         required
                       />
                     </div>
@@ -575,12 +568,12 @@ ${data.ai_analysis}
                           id="person2-name"
                           placeholder="请输入姓名"
                           value={person2.name}
-                          onChange={(e) => setPerson2({...person2, name: e.target.value})}
+                          onChange={(e) => setPerson2({ ...person2, name: e.target.value })}
                         />
                       </div>
                       <div>
                         <Label htmlFor="person2-gender">性别 *</Label>
-                        <Select value={person2.gender} onValueChange={(value: 'male' | 'female') => setPerson2({...person2, gender: value})}>
+                        <Select value={person2.gender} onValueChange={(value: 'male' | 'female') => setPerson2({ ...person2, gender: value })}>
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -596,7 +589,7 @@ ${data.ai_analysis}
                       <DateSelector
                         label="出生日期"
                         value={person2.birth_date}
-                        onChange={(value) => setPerson2({...person2, birth_date: value})}
+                        onChange={(value) => setPerson2({ ...person2, birth_date: value })}
                         required
                       />
                     </div>
@@ -605,7 +598,7 @@ ${data.ai_analysis}
                       <TimeSelector
                         label="出生时间"
                         value={person2.birth_time}
-                        onChange={(value) => setPerson2({...person2, birth_time: value})}
+                        onChange={(value) => setPerson2({ ...person2, birth_time: value })}
                         required
                       />
                     </div>
@@ -614,7 +607,7 @@ ${data.ai_analysis}
                       <CitySelector
                         label="出生城市"
                         value={person2.birth_city}
-                        onChange={(value) => setPerson2({...person2, birth_city: value})}
+                        onChange={(value) => setPerson2({ ...person2, birth_city: value })}
                         required
                       />
                     </div>
@@ -660,7 +653,7 @@ ${data.ai_analysis}
 
               {/* 分析按钮 */}
               <div className="text-center">
-                <Button 
+                <Button
                   onClick={handleAnalyze}
                   disabled={isAnalyzing}
                   size="lg"
@@ -719,8 +712,8 @@ ${data.ai_analysis}
                   <RefreshCw className="h-4 w-4 mr-2" />
                   重新分析
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={handleSaveReport}
                   disabled={isSaving}
                   className="border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-serif"
@@ -732,7 +725,7 @@ ${data.ai_analysis}
                   )}
                   {isSaving ? '保存中...' : '保存报告'}
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={handleShareResult}
                   disabled={isSharing}
@@ -773,13 +766,13 @@ ${data.ai_analysis}
                         <p className="text-rose-700 dark:text-rose-300 font-serif mb-6">
                           您的合盘分析图片已按照宋代美学风格生成，适合分享到小红书等社交平台
                         </p>
-                        
+
                         {/* 分享图片预览 */}
                         <div className="mb-6 flex justify-center">
                           <div className="relative">
-                            <Image 
-                              src={shareImageUrl} 
-                              alt="合盘分析分享图片" 
+                            <Image
+                              src={shareImageUrl}
+                              alt="合盘分析分享图片"
                               width={384}
                               height={384}
                               className="max-w-sm w-full h-auto rounded-lg shadow-lg border border-rose-200 dark:border-rose-700"
@@ -792,7 +785,7 @@ ${data.ai_analysis}
 
                         {/* 操作按钮 */}
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                          <Button 
+                          <Button
                             onClick={handleDownloadImage}
                             className="bg-rose-600 hover:bg-rose-700 text-white font-serif px-6 py-2"
                           >

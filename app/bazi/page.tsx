@@ -58,7 +58,7 @@ export default function BaziPage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const recordId = urlParams.get('recordId')
-    
+
     if (recordId) {
       loadHistoryRecord(recordId)
     }
@@ -68,7 +68,7 @@ export default function BaziPage() {
     try {
       setLoading(true)
       const response = await fetch(`/api/history/records/${recordId}`)
-      
+
       // 检查响应状态和内容类型
       if (!response.ok) {
         setError(`加载历史记录失败: ${response.status} ${response.statusText}`)
@@ -110,7 +110,7 @@ export default function BaziPage() {
     setResult(data)
     setLoading(false)
     setError(null)
-    
+
     // 添加到历史记录
     setAnalysisHistory(prev => [data, ...prev.slice(0, 4)]) // 保留最近5次记录
   }
@@ -129,7 +129,7 @@ export default function BaziPage() {
 
   const handleSaveReport = async () => {
     if (!result) return
-    
+
     setIsSaving(true)
     try {
       // 默认生成PDF报告
@@ -144,12 +144,12 @@ export default function BaziPage() {
 
   const handleSaveTextReport = async () => {
     if (!result) return
-    
+
     setIsSaving(true)
     try {
       // 创建文本报告内容
       const reportContent = generateReportContent(result)
-      
+
       // 创建并下载文件
       const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' })
       const url = URL.createObjectURL(blob)
@@ -170,12 +170,12 @@ export default function BaziPage() {
 
   const handleShareResult = async () => {
     if (!result) return
-    
+
     setIsSharing(true)
     try {
       // 生成分享图片
       const shareImageBlob = await generateShareImage(result)
-      
+
       if (shareImageBlob) {
         // 创建图片URL用于页面显示
         const imageUrl = URL.createObjectURL(shareImageBlob)
@@ -223,7 +223,7 @@ export default function BaziPage() {
       shareElement.style.position = 'relative'
       shareElement.style.overflow = 'hidden'
       shareElement.style.boxSizing = 'border-box'
-      
+
       // 从AI分析中提取命格总论
       const extractMingGeOverview = (aiAnalysis: string) => {
         // 查找命格总论内容
@@ -238,7 +238,7 @@ export default function BaziPage() {
           }
           return content
         }
-        
+
         // 如果没找到命格总论，尝试提取开头的概括性内容
         const firstParagraph = aiAnalysis.split(/[【\n]/)[0].trim()
         if (firstParagraph.length > 20) {
@@ -246,14 +246,14 @@ export default function BaziPage() {
           if (firstParagraph.length > 150) content += '...'
           return content
         }
-        
+
         return '您拥有独特的个性魅力，在人生道路上展现出与众不同的特质和潜力。'
       }
 
       // 从AI分析中提取事业财运信息
       const getCareerFinanceInfo = (aiAnalysis: string) => {
         const info = { career: '', finance: '' }
-        
+
         // 提取事业相关信息
         const careerMatch = aiAnalysis.match(/【事业发展】([^【]*)/i) || aiAnalysis.match(/事业[发展]?[：:](.*?)(?=【|\n|。)/i)
         if (careerMatch && careerMatch[1]) {
@@ -265,7 +265,7 @@ export default function BaziPage() {
         } else {
           info.career = '事业发展稳健，前景可期'
         }
-        
+
         // 提取财运相关信息
         const financeMatch = aiAnalysis.match(/【财运分析】([^【]*)/i) || aiAnalysis.match(/财运[分析]?[：:](.*?)(?=【|\n\n)/i)
         if (financeMatch && financeMatch[1]) {
@@ -279,7 +279,7 @@ export default function BaziPage() {
         } else {
           info.finance = '您具备不错的理财能力，财富会逐步积累。建议合理规划支出，适度投资，注重开源节流的平衡发展。'
         }
-        
+
         return info
       }
 
@@ -294,12 +294,12 @@ export default function BaziPage() {
         if (aiAnalysis.includes('乐观') || aiAnalysis.includes('积极')) traits.push('☀️ 乐观积极')
         if (aiAnalysis.includes('细心') || aiAnalysis.includes('谨慎')) traits.push('🔍 做事细心')
         if (aiAnalysis.includes('热情') || aiAnalysis.includes('外向')) traits.push('🔥 热情开朗')
-        
+
         // 如果没有匹配到特质，使用默认的
         if (traits.length === 0) {
           traits.push('✨ 独特魅力', '🌟 潜力无限', '💎 珍贵品质')
         }
-        
+
         return traits.slice(0, 3) // 最多显示3个特质
       }
 
@@ -307,19 +307,19 @@ export default function BaziPage() {
       const personalityTraits = getPersonalityTraits(aiAnalysisText)
       const minggeOverview = extractMingGeOverview(aiAnalysisText)
       const careerFinanceInfo = getCareerFinanceInfo(aiAnalysisText)
-      
+
       // 五行英文转中文
       const getWuxingChinese = (wuxing: string) => {
         const wuxingMap: Record<string, string> = {
           'wood': '木',
-          'fire': '火', 
+          'fire': '火',
           'earth': '土',
           'metal': '金',
           'water': '水'
         }
         return wuxingMap[wuxing.toLowerCase()] || wuxing
       }
-      
+
       shareElement.innerHTML = `
         <div style="
           width: 450px;
@@ -487,15 +487,15 @@ export default function BaziPage() {
           </div>
         </div>
       `
-      
+
       // 临时添加到DOM中进行渲染
       shareElement.style.position = 'absolute'
       shareElement.style.left = '-9999px'
       document.body.appendChild(shareElement)
-      
+
       // 动态导入html2canvas以优化性能
       const html2canvas = (await import('html2canvas')).default
-      
+
       // 使用html2canvas生成canvas - 优化配置确保完整显示
       const canvas = await html2canvas(shareElement, {
         scale: 2,
@@ -509,17 +509,17 @@ export default function BaziPage() {
         windowWidth: 450,
         windowHeight: 800
       })
-      
+
       // 移除临时元素
       document.body.removeChild(shareElement)
-      
+
       // 将canvas转换为Blob
       return new Promise((resolve) => {
         canvas.toBlob((blob) => {
           resolve(blob)
         }, 'image/png', 0.9)
       })
-      
+
     } catch (error) {
       console.error('生成分享图片失败:', error)
       return null
@@ -540,10 +540,10 @@ export default function BaziPage() {
       }
 
       const aiAnalysisText = typeof data.ai_analysis === 'string' ? data.ai_analysis : JSON.stringify(data.ai_analysis, null, 2)
-      
+
       // 方案：先生成一个简单的测试页面，验证html2canvas是否工作
       console.log('开始生成PDF测试...')
-      
+
       const testElement = document.createElement('div')
       testElement.style.width = '800px'
       testElement.style.height = '1400px'
@@ -623,9 +623,9 @@ export default function BaziPage() {
           </div>
         </div>
       `
-      
+
       document.body.appendChild(testElement)
-      
+
       try {
         console.log('开始渲染canvas...')
         // 动态导入html2canvas
@@ -638,49 +638,49 @@ export default function BaziPage() {
           scrollX: 0,
           scrollY: 0,
           allowTaint: true,
-          onclone: function(clonedDoc) {
+          onclone: function (clonedDoc) {
             console.log('Clone document created')
           }
         })
-        
+
         console.log('Canvas rendered successfully:', canvas.width, 'x', canvas.height)
         document.body.removeChild(testElement)
-        
+
         // 检查canvas是否为空
         const imgData = canvas.toDataURL('image/png')
         if (imgData === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==') {
           throw new Error('Canvas is empty')
         }
-        
+
         console.log('Image data length:', imgData.length)
-        
+
         // 动态导入jsPDF
         const { jsPDF } = await import('jspdf')
-        
+
         // 创建PDF
         const pdf = new jsPDF('p', 'mm', 'a4')
         const pageWidth = 210
         const pageHeight = 297
-        
+
         // 添加第一页
         const imgWidth = pageWidth
         const imgHeight = (canvas.height * pageWidth) / canvas.width
-        
+
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, Math.min(imgHeight, pageHeight))
-        
+
         // 如果AI分析文本很长，添加第二页
         if (aiAnalysisText.length > 500) {
           // 将AI文本分段，每段不超过300字符（大幅减少每页内容）
           const textChunks = []
           const maxChunkSize = 300
           let remainingText = aiAnalysisText.substring(300) // 跳过第一页预览的部分
-          
+
           while (remainingText.length > 0) {
             if (remainingText.length <= maxChunkSize) {
               textChunks.push(remainingText)
               break
             }
-            
+
             // 寻找合适的断点
             let breakPoint = maxChunkSize
             for (let i = maxChunkSize; i > maxChunkSize * 0.7; i--) {
@@ -689,24 +689,24 @@ export default function BaziPage() {
                 break
               }
             }
-            
+
             textChunks.push(remainingText.substring(0, breakPoint))
             remainingText = remainingText.substring(breakPoint)
           }
-          
+
           // 为每个文本块创建一页
           for (let chunkIndex = 0; chunkIndex < textChunks.length; chunkIndex++) {
             pdf.addPage()
-            
+
             const isLastChunk = chunkIndex === textChunks.length - 1
             const currentChunk = textChunks[chunkIndex]
-            
+
             // 格式化文本 - 将内容分成独立的段落框
             const paragraphs = currentChunk
               .split('\n\n')
               .map(paragraph => paragraph.trim())
               .filter(paragraph => paragraph.length > 0)
-            
+
             const aiElement = document.createElement('div')
             aiElement.style.width = '800px'
             aiElement.style.minHeight = '1200px'
@@ -757,9 +757,9 @@ export default function BaziPage() {
               </div>
               ` : ''}
             `
-            
+
             document.body.appendChild(aiElement)
-            
+
             // 重用之前的html2canvas导入或重新导入
             const html2canvas = (await import('html2canvas')).default
             const aiCanvas = await html2canvas(aiElement, {
@@ -771,36 +771,36 @@ export default function BaziPage() {
               scrollY: 0,
               allowTaint: true
             })
-            
+
             document.body.removeChild(aiElement)
-            
+
             const aiImgData = aiCanvas.toDataURL('image/png')
             const aiImgHeight = (aiCanvas.height * pageWidth) / aiCanvas.width
-            
+
             pdf.addImage(aiImgData, 'PNG', 0, 0, pageWidth, Math.min(aiImgHeight, pageHeight))
           }
         }
-        
+
         // 下载PDF
         const fileName = `天机AI八字分析_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '')}.pdf`
         console.log('开始下载PDF：', fileName)
         pdf.save(fileName)
-        
+
       } catch (canvasError) {
         console.error('Canvas rendering failed:', canvasError)
         document.body.removeChild(testElement)
-        
+
         // 如果html2canvas失败，使用纯jsPDF方案
         console.log('Fallback to pure jsPDF...')
         await generatePurePDF(data, aiAnalysisText)
       }
-      
+
     } catch (error) {
       console.error('PDF generation failed:', error)
       throw error
     }
   }
-  
+
   // 备用方案：纯jsPDF生成
   const generatePurePDF = async (data: BaziAnalysisResponse, aiAnalysisText: string) => {
     // 动态导入jsPDF
@@ -810,36 +810,36 @@ export default function BaziPage() {
     const pageHeight = 297
     const margin = 20
     let yPos = margin
-    
+
     // 标题
     pdf.setFontSize(20)
     pdf.text('Tianji AI - Bazi Analysis Report', margin, yPos)
     yPos += 15
-    
+
     pdf.setFontSize(12)
     pdf.text(`Generated: ${new Date().toLocaleDateString()}`, margin, yPos)
     yPos += 20
-    
+
     // 八字信息
     pdf.setFontSize(16)
     pdf.text('Bazi Four Pillars:', margin, yPos)
     yPos += 15
-    
+
     pdf.setFontSize(14)
     pdf.text(`Year: ${data.bazi.year_ganzhi}`, margin, yPos)
     yPos += 8
     pdf.text(`Month: ${data.bazi.month_ganzhi}`, margin, yPos)
-    yPos += 8  
+    yPos += 8
     pdf.text(`Day: ${data.bazi.day_ganzhi} (Day Master)`, margin, yPos)
     yPos += 8
     pdf.text(`Hour: ${data.bazi.hour_ganzhi}`, margin, yPos)
     yPos += 20
-    
+
     // 五行分析
     pdf.setFontSize(16)
     pdf.text('Five Elements Analysis:', margin, yPos)
     yPos += 15
-    
+
     pdf.setFontSize(12)
     pdf.text(`Wood: ${data.wuxing_analysis.wood}`, margin, yPos)
     yPos += 6
@@ -851,22 +851,22 @@ export default function BaziPage() {
     yPos += 6
     pdf.text(`Water: ${data.wuxing_analysis.water}`, margin, yPos)
     yPos += 12
-    
+
     pdf.text(`Strongest: ${data.wuxing_analysis.strongest}`, margin, yPos)
     yPos += 6
     pdf.text(`Weakest: ${data.wuxing_analysis.weakest}`, margin, yPos)
     yPos += 6
     pdf.text(`Useful God: ${data.yongshen}`, margin, yPos)
     yPos += 20
-    
+
     // AI分析
     pdf.setFontSize(16)
     pdf.text('AI Analysis:', margin, yPos)
     yPos += 15
-    
+
     pdf.setFontSize(10)
     const lines = pdf.splitTextToSize(aiAnalysisText, pageWidth - 2 * margin)
-    
+
     for (const line of lines) {
       if (yPos > pageHeight - margin) {
         pdf.addPage()
@@ -875,19 +875,19 @@ export default function BaziPage() {
       pdf.text(line, margin, yPos)
       yPos += 5
     }
-    
+
     // 底部信息
     if (yPos > pageHeight - 40) {
       pdf.addPage()
       yPos = margin
     }
-    
+
     yPos += 20
     pdf.setFontSize(12)
     pdf.text('Tianji AI - Traditional Wisdom x Modern Technology', margin, yPos)
     yPos += 8
     pdf.text(`Analysis Cost: ${data.cost} Tianji Points`, margin, yPos)
-    
+
     const fileName = `TianjiAI_BaziAnalysis_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '')}.pdf`
     pdf.save(fileName)
   }
@@ -939,14 +939,7 @@ ${typeof data.ai_analysis === 'string' ? data.ai_analysis : JSON.stringify(data.
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      background: `linear-gradient(45deg, 
-        #f0fdfa 0%, 
-        #ecfdf5 25%, 
-        #f0fdf4 50%, 
-        #ecfccb 75%, 
-        #f0fdfa 100%)`
-    }}>
+    <div className="min-h-screen relative overflow-hidden">
       {/* 宋代美学背景装饰 */}
       <div className="absolute inset-0 opacity-40 dark:opacity-20">
         <div className="absolute top-32 left-32 w-32 h-32 border-2 border-teal-300 dark:border-teal-600 rounded-full opacity-50"></div>
@@ -954,324 +947,324 @@ ${typeof data.ai_analysis === 'string' ? data.ai_analysis : JSON.stringify(data.
         <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-teal-300 dark:bg-teal-600 rounded-full opacity-40"></div>
         <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-emerald-400 dark:bg-emerald-600 rounded-full opacity-50"></div>
       </div>
-      
+
       <div className="relative z-10">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-7xl mx-auto">
-          
-          {!result && !loading && (
-            <>
-              {/* 页面介绍 - 宋代美学风格 */}
-              <section className="text-center mb-12">
-                <div className="max-w-4xl mx-auto">
-                  <h2 className="text-5xl font-serif font-bold mb-6 text-teal-800 dark:text-teal-200">
-                    八字命盘分析
-                  </h2>
-                  <div className="w-24 h-px bg-teal-300 dark:bg-teal-600 mx-auto mb-6"></div>
-                  <p className="text-xl font-serif leading-relaxed text-slate-700 dark:text-slate-300 max-w-3xl mx-auto mb-8">
-                    基于传统天干地支理论，结合现代AI智能技术，为您提供专业深入的命理分析。
-                    涵盖八字排盘、五行配置、大运推算、用神判断等传统命理精要。
-                  </p>
-                  <div className="flex justify-center items-center space-x-6 text-sm text-muted-foreground">
-                    <div className="flex items-center space-x-2">
-                      <Calculator className="h-4 w-4" />
-                      <span>精准排盘算法</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Sparkles className="h-4 w-4" />
-                      <span>AI智能解读</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RefreshCw className="h-4 w-4" />
-                      <span>实时分析</span>
-                    </div>
-                  </div>
-                </div>
-              </section>
 
-              {/* 输入表单 - 宋代美学风格 */}
-              <section className="mb-12">
-                <Card className="max-w-4xl mx-auto shadow-lg border border-teal-200 dark:border-teal-700 bg-white/90 dark:bg-slate-900/90">
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-serif font-bold text-teal-700 dark:text-teal-300 mb-2">
-                      生辰八字信息
-                    </CardTitle>
-                    <div className="w-16 h-px bg-teal-300 dark:bg-teal-600 mx-auto mb-2"></div>
-                    <CardDescription className="text-base font-serif text-teal-600 dark:text-teal-400">
-                      请填写准确的出生信息，AI将为您排出精准的八字命盘
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <BaziInputForm 
-                      onAnalysisStart={handleAnalysisStart}
-                      onAnalysisComplete={handleAnalysisComplete}
-                      loading={loading}
-                    />
-                  </CardContent>
-                </Card>
-              </section>
-
-              {/* 历史记录 - 宋代美学风格 */}
-              {analysisHistory.length > 0 && (
-                <section>
-                  <div className="text-center mb-8">
-                    <h3 className="text-3xl font-serif font-bold text-teal-700 dark:text-teal-300 mb-4">最近分析记录</h3>
-                    <div className="w-24 h-px bg-teal-300 dark:bg-teal-600 mx-auto"></div>
-                  </div>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {analysisHistory.map((history, index) => (
-                      <Card key={index} className="hover:shadow-lg transition-shadow border border-teal-200 dark:border-teal-700 bg-white/90 dark:bg-slate-900/90">
-                        <CardHeader>
-                          <CardTitle className="text-lg font-serif text-teal-700 dark:text-teal-300">分析记录 #{analysisHistory.length - index}</CardTitle>
-                          <CardDescription className="font-serif">
-                            八字：{history.bazi?.year_ganzhi} {history.bazi?.month_ganzhi} {history.bazi?.day_ganzhi} {history.bazi?.hour_ganzhi}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex justify-between items-center">
-                            <Badge variant="outline" className="border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 font-serif">用神：{history.yongshen}</Badge>
-                            <Button 
-                              size="sm" 
-                              variant="ghost" 
-                              className="font-serif text-teal-700 dark:text-teal-300 cursor-pointer" 
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setResult(history)
-                              }}
-                            >
-                              查看详情
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </section>
-              )}
-            </>
-          )}
-
-          {/* 分析中状态 */}
-          {loading && (
-            <section className="text-center py-16">
-              <Card className="max-w-2xl mx-auto">
-                <CardContent className="pt-12 pb-12">
-                  <div className="flex flex-col items-center space-y-6">
-                    <div className="relative">
-                      <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent"></div>
-                      <Calculator className="absolute inset-0 m-auto h-6 w-6" />
-                    </div>
-                    <div className="text-center">
-                      <h3 className="text-xl font-semibold mb-2">正在进行八字分析...</h3>
-                      <p className="text-muted-foreground mb-4">
-                        AI正在为您计算真太阳时、排列四柱、分析五行格局
-                      </p>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        <Badge variant="secondary">计算真太阳时</Badge>
-                        <Badge variant="secondary">排列年月日时四柱</Badge>
-                        <Badge variant="secondary">分析五行强弱</Badge>
-                        <Badge variant="secondary">推算十年大运</Badge>
-                        <Badge variant="secondary">判断格局用神</Badge>
-                        <Badge variant="secondary">AI智能解读</Badge>
+            {!result && !loading && (
+              <>
+                {/* 页面介绍 - 宋代美学风格 */}
+                <section className="text-center mb-12">
+                  <div className="max-w-4xl mx-auto">
+                    <h2 className="text-5xl font-serif font-bold mb-6 text-teal-800 dark:text-teal-200">
+                      八字命盘分析
+                    </h2>
+                    <div className="w-24 h-px bg-teal-300 dark:bg-teal-600 mx-auto mb-6"></div>
+                    <p className="text-xl font-serif leading-relaxed text-slate-700 dark:text-slate-300 max-w-3xl mx-auto mb-8">
+                      基于传统天干地支理论，结合现代AI智能技术，为您提供专业深入的命理分析。
+                      涵盖八字排盘、五行配置、大运推算、用神判断等传统命理精要。
+                    </p>
+                    <div className="flex justify-center items-center space-x-6 text-sm text-muted-foreground">
+                      <div className="flex items-center space-x-2">
+                        <Calculator className="h-4 w-4" />
+                        <span>精准排盘算法</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Sparkles className="h-4 w-4" />
+                        <span>AI智能解读</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RefreshCw className="h-4 w-4" />
+                        <span>实时分析</span>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </section>
-          )}
+                </section>
 
-          {/* 错误显示 */}
-          {error && (
-            <section className="text-center py-8">
-              <Card className="max-w-2xl mx-auto border-red-200">
-                <CardContent className="pt-6">
-                  <div className="text-center text-red-600 mb-4">
-                    <p className="text-lg font-semibold">{error}</p>
-                  </div>
-                  <Button onClick={handleNewAnalysis} variant="outline">
+                {/* 输入表单 - 宋代美学风格 */}
+                <section className="mb-12">
+                  <Card className="max-w-4xl mx-auto shadow-lg border border-teal-200 dark:border-teal-700 bg-white/90 dark:bg-slate-900/90">
+                    <CardHeader className="text-center">
+                      <CardTitle className="text-2xl font-serif font-bold text-teal-700 dark:text-teal-300 mb-2">
+                        生辰八字信息
+                      </CardTitle>
+                      <div className="w-16 h-px bg-teal-300 dark:bg-teal-600 mx-auto mb-2"></div>
+                      <CardDescription className="text-base font-serif text-teal-600 dark:text-teal-400">
+                        请填写准确的出生信息，AI将为您排出精准的八字命盘
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <BaziInputForm
+                        onAnalysisStart={handleAnalysisStart}
+                        onAnalysisComplete={handleAnalysisComplete}
+                        loading={loading}
+                      />
+                    </CardContent>
+                  </Card>
+                </section>
+
+                {/* 历史记录 - 宋代美学风格 */}
+                {analysisHistory.length > 0 && (
+                  <section>
+                    <div className="text-center mb-8">
+                      <h3 className="text-3xl font-serif font-bold text-teal-700 dark:text-teal-300 mb-4">最近分析记录</h3>
+                      <div className="w-24 h-px bg-teal-300 dark:bg-teal-600 mx-auto"></div>
+                    </div>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {analysisHistory.map((history, index) => (
+                        <Card key={index} className="hover:shadow-lg transition-shadow border border-teal-200 dark:border-teal-700 bg-white/90 dark:bg-slate-900/90">
+                          <CardHeader>
+                            <CardTitle className="text-lg font-serif text-teal-700 dark:text-teal-300">分析记录 #{analysisHistory.length - index}</CardTitle>
+                            <CardDescription className="font-serif">
+                              八字：{history.bazi?.year_ganzhi} {history.bazi?.month_ganzhi} {history.bazi?.day_ganzhi} {history.bazi?.hour_ganzhi}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex justify-between items-center">
+                              <Badge variant="outline" className="border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 font-serif">用神：{history.yongshen}</Badge>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="font-serif text-teal-700 dark:text-teal-300 cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setResult(history)
+                                }}
+                              >
+                                查看详情
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </>
+            )}
+
+            {/* 分析中状态 */}
+            {loading && (
+              <section className="text-center py-16">
+                <Card className="max-w-2xl mx-auto">
+                  <CardContent className="pt-12 pb-12">
+                    <div className="flex flex-col items-center space-y-6">
+                      <div className="relative">
+                        <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent"></div>
+                        <Calculator className="absolute inset-0 m-auto h-6 w-6" />
+                      </div>
+                      <div className="text-center">
+                        <h3 className="text-xl font-semibold mb-2">正在进行八字分析...</h3>
+                        <p className="text-muted-foreground mb-4">
+                          AI正在为您计算真太阳时、排列四柱、分析五行格局
+                        </p>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          <Badge variant="secondary">计算真太阳时</Badge>
+                          <Badge variant="secondary">排列年月日时四柱</Badge>
+                          <Badge variant="secondary">分析五行强弱</Badge>
+                          <Badge variant="secondary">推算十年大运</Badge>
+                          <Badge variant="secondary">判断格局用神</Badge>
+                          <Badge variant="secondary">AI智能解读</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+            )}
+
+            {/* 错误显示 */}
+            {error && (
+              <section className="text-center py-8">
+                <Card className="max-w-2xl mx-auto border-red-200">
+                  <CardContent className="pt-6">
+                    <div className="text-center text-red-600 mb-4">
+                      <p className="text-lg font-semibold">{error}</p>
+                    </div>
+                    <Button onClick={handleNewAnalysis} variant="outline">
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      重新分析
+                    </Button>
+                  </CardContent>
+                </Card>
+              </section>
+            )}
+
+            {/* 分析结果 - 宋代美学风格 */}
+            {result && (
+              <section>
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-serif font-bold text-teal-700 dark:text-teal-300 mb-4">八字命盘分析结果</h3>
+                  <div className="w-24 h-px bg-teal-300 dark:bg-teal-600 mx-auto mb-6"></div>
+                  <Button onClick={handleNewAnalysis} variant="outline" className="font-serif border-teal-300 dark:border-teal-600">
                     <RefreshCw className="h-4 w-4 mr-2" />
                     重新分析
                   </Button>
-                </CardContent>
-              </Card>
-            </section>
-          )}
+                </div>
 
-          {/* 分析结果 - 宋代美学风格 */}
-          {result && (
-            <section>
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-serif font-bold text-teal-700 dark:text-teal-300 mb-4">八字命盘分析结果</h3>
-                <div className="w-24 h-px bg-teal-300 dark:bg-teal-600 mx-auto mb-6"></div>
-                <Button onClick={handleNewAnalysis} variant="outline" className="font-serif border-teal-300 dark:border-teal-600">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  重新分析
-                </Button>
-              </div>
-              
-              <div className="bg-teal-50/50 dark:bg-teal-800/50 rounded-lg p-6 border border-teal-200 dark:border-teal-700">
-                <BaziResult 
-                  bazi={result.bazi}
-                  wuxingAnalysis={result.wuxing_analysis}
-                  yongshen={result.yongshen}
-                  aiAnalysis={result.ai_analysis}
-                  cost={result.cost}
-                />
-              </div>
+                <div className="bg-teal-50/50 dark:bg-teal-800/50 rounded-lg p-6 border border-teal-200 dark:border-teal-700">
+                  <BaziResult
+                    bazi={result.bazi}
+                    wuxingAnalysis={result.wuxing_analysis}
+                    yongshen={result.yongshen}
+                    aiAnalysis={result.ai_analysis}
+                    cost={result.cost}
+                  />
+                </div>
 
-              {/* 操作按钮 - 宋代美学风格 */}
-              <div className="mt-8 text-center space-x-4">
-                <Button onClick={handleNewAnalysis} className="bg-teal-700 dark:bg-teal-600 hover:bg-teal-800 dark:hover:bg-teal-700 text-white font-serif">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  重新分析
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={handleSaveReport}
-                  disabled={isSaving}
-                  className="border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 font-serif"
-                >
-                  {isSaving ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4 mr-2" />
-                  )}
-                  {isSaving ? '保存中...' : '保存报告'}
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={handleShareResult}
-                  disabled={isSharing}
-                  className="border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 font-serif"
-                >
-                  {copied ? (
-                    <Check className="h-4 w-4 mr-2 text-emerald-500" />
-                  ) : isSharing ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Share2 className="h-4 w-4 mr-2" />
-                  )}
-                  {copied ? '已复制' : isSharing ? '分享中...' : '分享结果'}
-                </Button>
-              </div>
+                {/* 操作按钮 - 宋代美学风格 */}
+                <div className="mt-8 text-center space-x-4">
+                  <Button onClick={handleNewAnalysis} className="bg-teal-700 dark:bg-teal-600 hover:bg-teal-800 dark:hover:bg-teal-700 text-white font-serif">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    重新分析
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleSaveReport}
+                    disabled={isSaving}
+                    className="border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 font-serif"
+                  >
+                    {isSaving ? (
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2" />
+                    )}
+                    {isSaving ? '保存中...' : '保存报告'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleShareResult}
+                    disabled={isSharing}
+                    className="border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 font-serif"
+                  >
+                    {copied ? (
+                      <Check className="h-4 w-4 mr-2 text-emerald-500" />
+                    ) : isSharing ? (
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Share2 className="h-4 w-4 mr-2" />
+                    )}
+                    {copied ? '已复制' : isSharing ? '分享中...' : '分享结果'}
+                  </Button>
+                </div>
 
-              {/* 分享图片显示区域 - 宋代美学风格 */}
-              {showShareImage && shareImageUrl && (
-                <div className="mt-8">
-                  <Card className="bg-gradient-to-br from-amber-50/90 to-orange-50/90 dark:from-amber-950/20 dark:to-orange-950/20 border-amber-200 dark:border-amber-800/50">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-xl font-serif font-bold text-amber-800 dark:text-amber-200">
-                          🎯 分享图片已生成
-                        </CardTitle>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleCloseShareImage}
-                          className="text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="w-24 h-px bg-amber-300 dark:bg-amber-600"></div>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <p className="text-amber-700 dark:text-amber-300 font-serif mb-6">
-                          您的八字分析图片已按照宋代美学风格生成，适合分享到小红书等社交平台
-                        </p>
-                        
-                        {/* 分享图片预览 */}
-                        <div className="mb-6 flex justify-center">
-                          <div className="relative max-w-md w-full">
-                            <Image 
-                              src={shareImageUrl} 
-                              alt="八字分析分享图片" 
-                              width={450}
-                              height={800}
-                              className="w-full h-auto rounded-lg shadow-lg border border-amber-200 dark:border-amber-700"
-                              style={{ maxHeight: '80vh', objectFit: 'contain' }}
-                            />
-                            <div className="absolute -top-3 -right-3 bg-amber-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
-                              ✨
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* 操作按钮 */}
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                          <Button 
-                            onClick={handleDownloadImage}
-                            className="bg-amber-600 hover:bg-amber-700 text-white font-serif px-6 py-2"
+                {/* 分享图片显示区域 - 宋代美学风格 */}
+                {showShareImage && shareImageUrl && (
+                  <div className="mt-8">
+                    <Card className="bg-gradient-to-br from-amber-50/90 to-orange-50/90 dark:from-amber-950/20 dark:to-orange-950/20 border-amber-200 dark:border-amber-800/50">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-xl font-serif font-bold text-amber-800 dark:text-amber-200">
+                            🎯 分享图片已生成
+                          </CardTitle>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCloseShareImage}
+                            className="text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30"
                           >
-                            <Download className="h-4 w-4 mr-2" />
-                            下载图片
+                            <X className="h-4 w-4" />
                           </Button>
-                          <p className="text-sm text-amber-600 dark:text-amber-400 font-serif">
-                            建议保存到相册后分享到社交平台
-                          </p>
                         </div>
+                        <div className="w-24 h-px bg-amber-300 dark:bg-amber-600"></div>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="text-center">
+                          <p className="text-amber-700 dark:text-amber-300 font-serif mb-6">
+                            您的八字分析图片已按照宋代美学风格生成，适合分享到小红书等社交平台
+                          </p>
 
-                        {/* 使用提示 */}
-                        <div className="mt-6 p-4 bg-amber-100/50 dark:bg-amber-900/20 rounded-lg border border-amber-200/50 dark:border-amber-700/30">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-white text-xs font-bold">💡</span>
+                          {/* 分享图片预览 */}
+                          <div className="mb-6 flex justify-center">
+                            <div className="relative max-w-md w-full">
+                              <Image
+                                src={shareImageUrl}
+                                alt="八字分析分享图片"
+                                width={450}
+                                height={800}
+                                className="w-full h-auto rounded-lg shadow-lg border border-amber-200 dark:border-amber-700"
+                                style={{ maxHeight: '80vh', objectFit: 'contain' }}
+                              />
+                              <div className="absolute -top-3 -right-3 bg-amber-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                ✨
+                              </div>
                             </div>
-                            <div className="text-left">
-                              <h4 className="font-serif font-semibold text-amber-800 dark:text-amber-200 text-sm mb-1">分享建议</h4>
-                              <p className="text-amber-700 dark:text-amber-300 text-xs leading-relaxed font-serif">
-                                • 图片采用9:16比例，完美适配小红书、抖音等竖屏平台<br/>
-                                • 宋代美学设计，传统与现代完美结合<br/>
-                                • 高清输出，确保分享时清晰度最佳
-                              </p>
+                          </div>
+
+                          {/* 操作按钮 */}
+                          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <Button
+                              onClick={handleDownloadImage}
+                              className="bg-amber-600 hover:bg-amber-700 text-white font-serif px-6 py-2"
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              下载图片
+                            </Button>
+                            <p className="text-sm text-amber-600 dark:text-amber-400 font-serif">
+                              建议保存到相册后分享到社交平台
+                            </p>
+                          </div>
+
+                          {/* 使用提示 */}
+                          <div className="mt-6 p-4 bg-amber-100/50 dark:bg-amber-900/20 rounded-lg border border-amber-200/50 dark:border-amber-700/30">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white text-xs font-bold">💡</span>
+                              </div>
+                              <div className="text-left">
+                                <h4 className="font-serif font-semibold text-amber-800 dark:text-amber-200 text-sm mb-1">分享建议</h4>
+                                <p className="text-amber-700 dark:text-amber-300 text-xs leading-relaxed font-serif">
+                                  • 图片采用9:16比例，完美适配小红书、抖音等竖屏平台<br />
+                                  • 宋代美学设计，传统与现代完美结合<br />
+                                  • 高清输出，确保分享时清晰度最佳
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* 历史记录提示 - 宋代美学风格 */}
+                <div className="mt-8">
+                  <Card className="bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50">
+                    <CardContent className="p-6 text-center">
+                      <div className="flex items-center justify-center space-x-3 mb-4">
+                        <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center">
+                          <Calculator className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <h3 className="text-lg font-serif font-semibold text-emerald-800 dark:text-emerald-200">
+                          分析已保存
+                        </h3>
                       </div>
+                      <p className="text-emerald-700 dark:text-emerald-300 font-serif mb-4">
+                        本次八字分析结果已自动保存到您的历史记录中，您可以随时查看和回顾所有分析结果。
+                      </p>
+                      <Link href="/history">
+                        <Button variant="outline" className="border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-serif">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          查看历史记录
+                        </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 </div>
-              )}
-
-              {/* 历史记录提示 - 宋代美学风格 */}
-              <div className="mt-8">
-                <Card className="bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50">
-                  <CardContent className="p-6 text-center">
-                    <div className="flex items-center justify-center space-x-3 mb-4">
-                      <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center">
-                        <Calculator className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                      </div>
-                      <h3 className="text-lg font-serif font-semibold text-emerald-800 dark:text-emerald-200">
-                        分析已保存
-                      </h3>
-                    </div>
-                    <p className="text-emerald-700 dark:text-emerald-300 font-serif mb-4">
-                      本次八字分析结果已自动保存到您的历史记录中，您可以随时查看和回顾所有分析结果。
-                    </p>
-                    <Link href="/history">
-                      <Button variant="outline" className="border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-serif">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        查看历史记录
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              </div>
-            </section>
-          )}
-        </div>
-      </div>
-
-      {/* Footer - 宋代美学风格 */}
-      <footer className="border-t border-teal-200 dark:border-teal-700 bg-teal-50/90 dark:bg-slate-900/90 backdrop-blur-sm mt-16 relative">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center text-teal-600 dark:text-teal-400">
-            <p className="font-serif">&copy; 2024 天机AI. 传统智慧，现代科技</p>
+              </section>
+            )}
           </div>
         </div>
-      </footer>
+
+        {/* Footer - 宋代美学风格 */}
+        <footer className="border-t border-teal-200 dark:border-teal-700 bg-teal-50/90 dark:bg-slate-900/90 backdrop-blur-sm mt-16 relative">
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center text-teal-600 dark:text-teal-400">
+              <p className="font-serif">&copy; 2024 天机AI. 传统智慧，现代科技</p>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   )

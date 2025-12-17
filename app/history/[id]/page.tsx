@@ -5,12 +5,12 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-  ArrowLeft, 
-  Star, 
-  StarOff, 
-  Share2, 
-  RefreshCw, 
+import {
+  ArrowLeft,
+  Star,
+  StarOff,
+  Share2,
+  RefreshCw,
   Calendar,
   Sparkles,
   User,
@@ -79,7 +79,7 @@ function getQualityLabel(score: number): string {
 // 专门为梦境解析渲染完整的宋代美学风格内容
 function DreamAnalysisResult({ record }: { record: AnalysisRecord }) {
   const analysis = record.output_data.interpretation_result || {}
-  
+
   // 优先使用AI分析，如果是有效字符串
   let aiContent = ''
   if (typeof record.output_data.ai_analysis === 'string' && record.output_data.ai_analysis.trim()) {
@@ -109,7 +109,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
 ` : ''}---
 *基于系统分析生成的解读内容*`
   }
-  
+
   return (
     <div className="space-y-6">
       {/* 梦境摘要 - 宋代美学风格 */}
@@ -118,19 +118,19 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
           {/* 背景装饰 */}
           <div className="absolute inset-0 opacity-5">
             <svg className="w-full h-full" viewBox="0 0 400 200">
-              <circle cx="100" cy="50" r="30" fill="currentColor" className="text-amber-400"/>
-              <circle cx="300" cy="150" r="20" fill="currentColor" className="text-orange-400"/>
-              <path d="M50,100 Q100,80 150,100 T250,100" stroke="currentColor" strokeWidth="2" fill="none" className="text-red-400"/>
+              <circle cx="100" cy="50" r="30" fill="currentColor" className="text-amber-400" />
+              <circle cx="300" cy="150" r="20" fill="currentColor" className="text-orange-400" />
+              <path d="M50,100 Q100,80 150,100 T250,100" stroke="currentColor" strokeWidth="2" fill="none" className="text-red-400" />
             </svg>
           </div>
-          
+
           {/* 装饰线 */}
           <div className="flex items-center justify-center mb-6">
             <div className="w-16 h-px bg-amber-400 dark:bg-amber-600"></div>
             <div className="mx-4 w-3 h-3 border-2 border-amber-400 dark:border-amber-600 rounded-full bg-amber-100 dark:bg-amber-800"></div>
             <div className="w-16 h-px bg-amber-400 dark:bg-amber-600"></div>
           </div>
-          
+
           {/* 传统印章式标题 */}
           <div className="relative inline-block mb-6">
             <div className="absolute inset-0 bg-red-600 dark:bg-red-700 transform rotate-45 rounded-lg opacity-15"></div>
@@ -138,7 +138,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
               梦境解析报告
             </CardTitle>
           </div>
-          
+
           {/* 摘要内容 */}
           <div className="bg-white/80 dark:bg-slate-900/80 rounded-lg p-6 border border-amber-200 dark:border-amber-700 shadow-lg max-w-4xl mx-auto">
             <p className="text-lg font-serif leading-relaxed text-slate-700 dark:text-slate-300 text-justify">
@@ -154,11 +154,11 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
           {Object.entries(analysis.dream_quality).map(([key, score]) => {
             const labels = {
               clarity_score: '清晰度',
-              emotional_intensity: '情感强度', 
+              emotional_intensity: '情感强度',
               symbolic_richness: '象征丰富度',
               overall_significance: '整体重要性'
             }
-            
+
             return (
               <Card key={key} className="border border-purple-200 dark:border-purple-700 bg-white/90 dark:bg-slate-900/90">
                 <CardHeader className="text-center pb-2">
@@ -199,7 +199,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </Badge>
                   </div>
                 )}
-                
+
                 {analysis.category_analysis.secondary_categories?.length > 0 && (
                   <div>
                     <div className="font-semibold text-sm mb-2">次要分类</div>
@@ -210,7 +210,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </div>
                   </div>
                 )}
-                
+
                 {analysis.category_analysis.symbolic_elements?.length > 0 && (
                   <div>
                     <div className="font-semibold text-sm mb-2">象征元素</div>
@@ -241,7 +241,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </p>
                   </div>
                 )}
-                
+
                 {analysis.psychological_analysis.subconscious_themes?.length > 0 && (
                   <div>
                     <div className="font-semibold text-sm mb-2">潜意识主题</div>
@@ -252,7 +252,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </div>
                   </div>
                 )}
-                
+
                 {analysis.psychological_analysis.stress_indicators?.length > 0 && (
                   <div>
                     <div className="font-semibold text-sm mb-2">压力指标</div>
@@ -329,7 +329,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                   </ul>
                 </div>
               )}
-              
+
               {analysis.life_guidance.emotional_needs?.length > 0 && (
                 <div>
                   <div className="font-semibold text-sm mb-2">情感需求</div>
@@ -364,7 +364,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                   </ul>
                 </div>
               )}
-              
+
               {analysis.life_guidance.recommended_actions?.length > 0 && (
                 <div>
                   <div className="font-semibold text-sm mb-2">建议行动</div>
@@ -430,10 +430,10 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
           {/* 古典装饰 */}
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-8 opacity-20">
             <svg viewBox="0 0 64 32" className="w-full h-full text-amber-400">
-              <path d="M8,16 Q16,8 24,16 Q32,8 40,16 Q48,8 56,16 Q48,24 40,16 Q32,24 24,16 Q16,24 8,16 Z" fill="currentColor"/>
+              <path d="M8,16 Q16,8 24,16 Q32,8 40,16 Q48,8 56,16 Q48,24 40,16 Q32,24 24,16 Q16,24 8,16 Z" fill="currentColor" />
             </svg>
           </div>
-          
+
           {/* 传统印章式标题 */}
           <div className="relative inline-block mb-6 mt-4">
             <div className="absolute inset-0 bg-red-600 dark:bg-red-700 transform rotate-45 rounded-lg opacity-15"></div>
@@ -441,19 +441,19 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
               AI智慧解读
             </CardTitle>
           </div>
-          
+
           {/* 装饰线 */}
           <div className="flex items-center justify-center mb-4">
             <div className="w-12 h-px bg-amber-400 dark:bg-amber-600"></div>
             <Sparkles className="h-5 w-5 mx-3 text-amber-500" />
             <div className="w-12 h-px bg-amber-400 dark:bg-amber-600"></div>
           </div>
-          
+
           <p className="text-lg font-serif text-amber-700 dark:text-amber-300 italic">
             深度解析·智慧启迪·人生指引
           </p>
         </CardHeader>
-        
+
         <CardContent className="px-8 pb-8">
           {/* AI解读内容 - Markdown格式支持 */}
           <div className="bg-white/90 dark:bg-slate-900/90 rounded-lg p-6 border border-amber-200 dark:border-amber-700 shadow-lg">
@@ -462,14 +462,14 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                 remarkPlugins={[remarkGfm]}
                 components={{
                   // 段落 - 统一格式
-                  p: ({children}) => (
-                    <p className="mb-6 text-base leading-7 text-slate-700 dark:text-slate-300 font-serif" 
-                       style={{ textAlign: 'justify', lineHeight: '1.8' }}>
+                  p: ({ children }) => (
+                    <p className="mb-6 text-base leading-7 text-slate-700 dark:text-slate-300 font-serif"
+                      style={{ textAlign: 'justify', lineHeight: '1.8' }}>
                       {children}
                     </p>
                   ),
                   // 标题系列 - 清晰层次
-                  h1: ({children}) => (
+                  h1: ({ children }) => (
                     <div className="mb-6 mt-8 first:mt-0">
                       <div className="relative">
                         <div className="absolute inset-0 bg-red-600 dark:bg-red-700 transform rotate-45 rounded-md opacity-10"></div>
@@ -479,14 +479,14 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                       </div>
                     </div>
                   ),
-                  h2: ({children}) => (
+                  h2: ({ children }) => (
                     <div className="mb-5 mt-7">
                       <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 border-l-4 border-amber-400 pl-4 py-2 bg-amber-50 dark:bg-amber-900/20 font-serif">
                         {children}
                       </h2>
                     </div>
                   ),
-                  h3: ({children}) => (
+                  h3: ({ children }) => (
                     <div className="mb-4 mt-6">
                       <h3 className="text-lg font-medium text-red-600 dark:text-red-400 border-l-3 border-amber-300 pl-3 py-1 font-serif">
                         {children}
@@ -494,18 +494,18 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </div>
                   ),
                   // 强调和格式
-                  strong: ({children}) => (
+                  strong: ({ children }) => (
                     <strong className="text-orange-700 dark:text-orange-300 font-semibold px-1">
                       {children}
                     </strong>
                   ),
-                  em: ({children}) => (
+                  em: ({ children }) => (
                     <em className="text-amber-700 dark:text-amber-300 italic">
                       {children}
                     </em>
                   ),
                   // 引用块 - 重要信息突出
-                  blockquote: ({children}) => (
+                  blockquote: ({ children }) => (
                     <div className="my-6">
                       <blockquote className="bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 dark:from-orange-900/15 dark:via-amber-900/15 dark:to-yellow-900/15 border-l-4 border-orange-400 p-5 rounded-r-lg shadow-sm">
                         <div className="text-orange-800 dark:text-orange-200 font-medium leading-relaxed">
@@ -515,7 +515,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </div>
                   ),
                   // 有序列表 - 清晰编号
-                  ol: ({children}) => (
+                  ol: ({ children }) => (
                     <div className="my-6">
                       <ol className="space-y-3 counter-reset-none">
                         {children}
@@ -523,7 +523,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </div>
                   ),
                   // 无序列表
-                  ul: ({children}) => (
+                  ul: ({ children }) => (
                     <div className="my-6">
                       <ul className="space-y-3">
                         {children}
@@ -531,7 +531,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     </div>
                   ),
                   // 列表项 - 统一格式
-                  li: ({children, ...props}) => {
+                  li: ({ children, ...props }) => {
                     const isOrdered = (props as any).ordered;
                     return (
                       <li className={`${isOrdered ? 'list-decimal' : 'list-disc'} list-inside text-slate-700 dark:text-slate-300 leading-relaxed pl-2`}>
@@ -540,7 +540,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                     )
                   },
                   // 代码
-                  code: ({children, ...props}) => {
+                  code: ({ children, ...props }) => {
                     const inline = (props as any).inline;
                     if (inline) {
                       return (
@@ -555,7 +555,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                       </code>
                     )
                   },
-                  pre: ({children}) => (
+                  pre: ({ children }) => (
                     <div className="my-6">
                       <pre className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg overflow-x-auto border border-slate-200 dark:border-slate-700">
                         {children}
@@ -577,7 +577,7 @@ ${analysis.warnings_and_suggestions.health_reminders.map((reminder: string) => `
                 {aiContent || '暂无AI解读内容'}
               </ReactMarkdown>
             </div>
-            
+
             {/* 底部装饰 */}
             <div className="mt-8 pt-6 border-t border-amber-200 dark:border-amber-700">
               <div className="flex items-center justify-center text-amber-600 dark:text-amber-400">
@@ -613,7 +613,7 @@ export default function RecordDetailPage() {
     try {
       setLoading(true)
       const data = await apiCall(`/api/history/records/${id}`) as any
-      
+
       if (data.success && data.data) {
         setRecord(data.data)
       } else {
@@ -629,7 +629,7 @@ export default function RecordDetailPage() {
 
   const handleToggleFavorite = async () => {
     if (!record) return
-    
+
     try {
       const data = await apiCall(`/api/history/records/${record.id}`, {
         method: 'PUT',
@@ -653,14 +653,14 @@ export default function RecordDetailPage() {
 
   const handleReanalyze = () => {
     if (!record) return
-    
+
     // 跳转到对应的分析页面，并预填数据
     const typeConfig = ANALYSIS_TYPES[record.analysis_type]
     const queryParams = new URLSearchParams({
       reanalyze: 'true',
       data: JSON.stringify(record.input_data)
     })
-    
+
     router.push(`${typeConfig.path}?${queryParams.toString()}`)
   }
 
@@ -678,12 +678,12 @@ export default function RecordDetailPage() {
   // 保存报告为PDF
   const handleSaveReport = async () => {
     if (!record) return
-    
+
     setIsSaving(true)
     try {
       // 生成报告内容
       const reportContent = generateReportContent(record)
-      
+
       // 创建并下载文件
       const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' })
       const url = URL.createObjectURL(blob)
@@ -836,14 +836,7 @@ ${record.output_data.result}
   const typeConfig = ANALYSIS_TYPES[record.analysis_type]
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      background: `linear-gradient(45deg, 
-        #fef7ed 0%, 
-        #fef3e2 25%, 
-        #fdf2f8 50%, 
-        #fef7ed 75%, 
-        #fef3e2 100%)`
-    }}>
+    <div className="min-h-screen relative overflow-hidden">
       {/* 宋代美学背景装饰 */}
       <div className="absolute inset-0 opacity-40 dark:opacity-20">
         <div className="absolute top-32 left-32 w-32 h-32 border-2 border-slate-300 dark:border-slate-600 rounded-full opacity-50"></div>
@@ -851,7 +844,7 @@ ${record.output_data.result}
         <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-slate-300 dark:bg-slate-600 rounded-full opacity-40"></div>
         <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-amber-400 dark:bg-amber-600 rounded-full opacity-50"></div>
       </div>
-      
+
       <div className="relative z-10">
         <main className="container mx-auto px-4 py-8">
           {/* 页面操作栏 */}
@@ -951,7 +944,7 @@ ${record.output_data.result}
             {/* 根据分析类型显示完整的分析结果 */}
             {record.analysis_type === 'bazi' && record.output_data.bazi && record.output_data.wuxing_analysis ? (
               <div className="bg-teal-50/50 dark:bg-teal-800/50 rounded-lg p-6 border border-teal-200 dark:border-teal-700">
-                <BaziResult 
+                <BaziResult
                   bazi={record.output_data.bazi}
                   wuxingAnalysis={record.output_data.wuxing_analysis}
                   dayun={record.output_data.dayun || []}
@@ -969,7 +962,7 @@ ${record.output_data.result}
               <DreamAnalysisResult record={record} />
             ) : (
               <div className="bg-slate-50/50 dark:bg-slate-800/50 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
-                <GenericAnalysisResult 
+                <GenericAnalysisResult
                   title={record.title}
                   analysisType={record.analysis_type}
                   aiAnalysis={record.output_data.ai_analysis}
@@ -982,15 +975,15 @@ ${record.output_data.result}
 
             {/* 操作按钮 */}
             <div className="mt-8 text-center space-x-4">
-              <Button 
+              <Button
                 onClick={handleReanalyze}
                 className="bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-700 text-white font-serif"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 重新分析
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleSaveReport}
                 disabled={isSaving}
                 className="border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-serif"
@@ -1002,7 +995,7 @@ ${record.output_data.result}
                 )}
                 {isSaving ? '保存中...' : '保存报告'}
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={handleShare}
                 disabled={isSharing}

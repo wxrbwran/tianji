@@ -8,15 +8,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { 
-  Search, 
-  Filter, 
-  Calendar, 
-  Star, 
-  StarOff, 
-  Share2, 
-  Trash2, 
-  Eye, 
+import {
+  Search,
+  Filter,
+  Calendar,
+  Star,
+  StarOff,
+  Share2,
+  Trash2,
+  Eye,
   RefreshCw,
   History,
   Users,
@@ -104,9 +104,9 @@ function useInfiniteScroll(callback: () => void, hasMore: boolean, loading: bool
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       const clientHeight = document.documentElement.clientHeight || window.innerHeight
-      
+
       const isNearBottom = scrollTop + clientHeight >= scrollHeight - 200
-      
+
       // 调试信息
       if (isNearBottom) {
         console.log('滚动调试:', {
@@ -120,11 +120,11 @@ function useInfiniteScroll(callback: () => void, hasMore: boolean, loading: bool
           shouldTrigger: isNearBottom && !isFetching && hasMore && !loading
         })
       }
-      
+
       if (!isNearBottom || isFetching || !hasMore || loading) {
         return
       }
-      
+
       console.log('触发无限滚动加载')
       setIsFetching(true)
     }
@@ -135,7 +135,7 @@ function useInfiniteScroll(callback: () => void, hasMore: boolean, loading: bool
 
   useEffect(() => {
     if (!isFetching) return
-    
+
     const executeCallback = async () => {
       try {
         await callback()
@@ -145,7 +145,7 @@ function useInfiniteScroll(callback: () => void, hasMore: boolean, loading: bool
         setIsFetching(false)
       }
     }
-    
+
     executeCallback()
   }, [isFetching, callback])
 
@@ -186,7 +186,7 @@ export default function OptimizedHistoryPage() {
     mostUsedType: undefined,
     averagePointsPerRecord: 0
   })
-  
+
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [selectedRecord, setSelectedRecord] = useState<AnalysisRecord | null>(null)
@@ -235,7 +235,7 @@ export default function OptimizedHistoryPage() {
       })
 
       const data = await apiCall(`/api/history/records?${queryParams}`) as any
-      
+
       // 前端调试日志
       console.log(`前端调试 - 页码: ${page}, 偏移: ${page * 12}, API返回:`, {
         recordsCount: data.data?.length || 0,
@@ -247,7 +247,7 @@ export default function OptimizedHistoryPage() {
       if (data.success) {
         const newRecords = data.data || []
         const pagination = data.pagination || {}
-        
+
         // 如果是刷新或第一页，替换记录；否则追加
         if (refresh || page === 0) {
           setRecords(newRecords)
@@ -264,18 +264,18 @@ export default function OptimizedHistoryPage() {
             const existingIds = new Set(prev.map((r: AnalysisRecord) => r.id))
             const filteredNewRecords = newRecords.filter((r: AnalysisRecord) => !existingIds.has(r.id))
             const updatedRecords = [...prev, ...filteredNewRecords]
-            
+
             // 更新统计信息
             setStats(prevStats => ({
               ...prevStats,
               totalPoints: updatedRecords.reduce((sum: number, r: any) => sum + (r.points_cost || 0), 0),
               favoriteCount: updatedRecords.filter((r: any) => r.is_favorite).length
             }))
-            
+
             return updatedRecords
           })
         }
-        
+
         // 使用API返回的hasMore判断
         setHasMore(pagination.hasMore !== false)
       } else {
@@ -307,7 +307,7 @@ export default function OptimizedHistoryPage() {
       setIsLoadingMore(true)
       const nextPage = currentPage + 1
       setCurrentPage(nextPage)
-      
+
       // 使用统一的loadData函数
       await loadData(false, nextPage)
       setIsLoadingMore(false)
@@ -327,13 +327,13 @@ export default function OptimizedHistoryPage() {
   // 切换收藏状态（优化版）
   const handleToggleFavorite = useCallback(async (record: AnalysisRecord) => {
     const optimisticUpdate = (records: AnalysisRecord[]) =>
-      records.map(r => 
+      records.map(r =>
         r.id === record.id ? { ...r, is_favorite: !r.is_favorite } : r
       )
 
     // 乐观更新UI
     setRecords(optimisticUpdate)
-    
+
     // 暂时只做UI更新，不调用后端
     console.log('Toggle favorite for record:', record.id)
   }, [])
@@ -344,7 +344,7 @@ export default function OptimizedHistoryPage() {
 
     // 乐观更新UI
     setRecords(prev => prev.filter(r => r.id !== record.id))
-    
+
     try {
       const data = await apiCall('/api/history/optimized-simple', {
         method: 'PUT',
@@ -357,7 +357,7 @@ export default function OptimizedHistoryPage() {
           }]
         })
       }) as any
-      
+
       if (!data.success) {
         // 如果失败，恢复记录
         refreshData()
@@ -394,9 +394,9 @@ export default function OptimizedHistoryPage() {
   const handleCopyLink = useCallback(async (record: AnalysisRecord) => {
     try {
       const fullUrl = `${window.location.origin}/history/${record.id}`
-      
+
       await navigator.clipboard.writeText(fullUrl)
-      
+
       // 简单的提示，可以考虑使用 toast 组件
       const button = document.querySelector(`[data-record-id="${record.id}"]`) as HTMLElement
       if (button) {
@@ -417,7 +417,7 @@ export default function OptimizedHistoryPage() {
   }, [])
 
   // 日期格式化（使用memoization）
-  const formatDate = useMemo(() => 
+  const formatDate = useMemo(() =>
     (dateString: string) => {
       const date = new Date(dateString)
       return date.toLocaleDateString('zh-CN', {
@@ -455,14 +455,7 @@ export default function OptimizedHistoryPage() {
   )
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      background: `linear-gradient(45deg, 
-        #fef7ed 0%, 
-        #fef3e2 25%, 
-        #fdf2f8 50%, 
-        #fef7ed 75%, 
-        #fef3e2 100%)`
-    }}>
+    <div className="min-h-screen relative overflow-hidden" >
       {/* 背景装饰 - 简化版本 */}
       <div className="absolute inset-0 opacity-40 dark:opacity-20">
         <div className="absolute top-32 left-32 w-32 h-32 border-2 border-slate-300 dark:border-slate-600 rounded-full opacity-50"></div>
@@ -470,7 +463,7 @@ export default function OptimizedHistoryPage() {
         <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-slate-300 dark:bg-slate-600 rounded-full opacity-40"></div>
         <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-amber-400 dark:bg-amber-600 rounded-full opacity-50"></div>
       </div>
-      
+
       <div className="relative z-10">
         <main className="container mx-auto px-4 py-8">
           {/* 页面标题 */}
@@ -501,27 +494,27 @@ export default function OptimizedHistoryPage() {
 
           {/* 统计信息 */}
           <section className="grid md:grid-cols-4 gap-4 mb-8">
-            <StatCard 
-              icon={History} 
-              label="总记录" 
-              value={stats.totalCount} 
+            <StatCard
+              icon={History}
+              label="总记录"
+              value={stats.totalCount}
               loading={loading && currentPage === 0}
             />
-            <StatCard 
-              icon={Sparkles} 
-              label="消耗点数" 
-              value={stats.totalPoints} 
+            <StatCard
+              icon={Sparkles}
+              label="消耗点数"
+              value={stats.totalPoints}
               loading={loading && currentPage === 0}
             />
-            <StatCard 
-              icon={Star} 
-              label="收藏记录" 
-              value={stats.favoriteCount} 
+            <StatCard
+              icon={Star}
+              label="收藏记录"
+              value={stats.favoriteCount}
               loading={loading && currentPage === 0}
             />
-            <StatCard 
-              icon={TrendingUp} 
-              label="最常用" 
+            <StatCard
+              icon={TrendingUp}
+              label="最常用"
               value={stats.mostUsedType ? ANALYSIS_TYPES[stats.mostUsedType as keyof typeof ANALYSIS_TYPES]?.name || '暂无' : '暂无'}
               loading={loading && currentPage === 0}
             />
@@ -550,8 +543,8 @@ export default function OptimizedHistoryPage() {
                   {/* 类型筛选 */}
                   <div>
                     <Label className="text-sm font-serif mb-2">分析类型</Label>
-                    <Select 
-                      value={filters.analysisType} 
+                    <Select
+                      value={filters.analysisType}
                       onValueChange={(value) => setFilters({ analysisType: value })}
                     >
                       <SelectTrigger>
@@ -571,8 +564,8 @@ export default function OptimizedHistoryPage() {
                   {/* 排序选择 */}
                   <div>
                     <Label className="text-sm font-serif mb-2">排序方式</Label>
-                    <Select 
-                      value={`${filters.sortBy}-${filters.sortOrder}`} 
+                    <Select
+                      value={`${filters.sortBy}-${filters.sortOrder}`}
                       onValueChange={(value) => {
                         const [sortBy, sortOrder] = value.split('-') as [typeof filters.sortBy, typeof filters.sortOrder]
                         setFilters({ sortBy, sortOrder })
@@ -672,8 +665,8 @@ export default function OptimizedHistoryPage() {
                   {records.map((record) => {
                     const typeConfig = ANALYSIS_TYPES[record.analysis_type]
                     return (
-                      <Card 
-                        key={record.id} 
+                      <Card
+                        key={record.id}
                         className="bg-white/90 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-200 group"
                       >
                         <CardContent className="p-6">
@@ -803,7 +796,7 @@ export default function OptimizedHistoryPage() {
                     </div>
                   </div>
                 )}
-                
+
                 {/* 到底了的提示 */}
                 {!hasMore && records.length > 0 && (
                   <div className="text-center mt-8 text-slate-500 dark:text-slate-400 font-serif">
@@ -841,7 +834,7 @@ export default function OptimizedHistoryPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
                   <h4 className="font-serif font-semibold mb-2">分析摘要</h4>
                   <p className="text-slate-700 dark:text-slate-300 font-serif">
@@ -850,15 +843,15 @@ export default function OptimizedHistoryPage() {
                 </div>
 
                 <div className="flex space-x-4">
-                  <Button 
+                  <Button
                     className="font-serif"
                     onClick={() => handleViewFullResult(selectedRecord)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
                     查看完整结果
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="font-serif"
                     onClick={() => handleCopyLink(selectedRecord)}
                     data-record-id={selectedRecord.id}

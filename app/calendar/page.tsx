@@ -4,15 +4,13 @@ import { FortuneCalendarMain } from '@/components/fortune-calendar/FortuneCalend
 
 export default function CalendarPage() {
   return (
-    <div className="min-h-screen" style={{
-      background: '#f0f9f0'
-    }}>
+    <div className="min-h-screen">
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           <FortuneCalendarMain isLoggedIn={false} hasPersonalInfo={false} />
         </div>
       </main>
-      
+
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white/80 mt-16">
         <div className="container mx-auto px-4 py-8">
