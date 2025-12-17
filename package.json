@@ -46,6 +46,7 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.40.1",
     "@testing-library/jest-dom": "^6.6.3",
