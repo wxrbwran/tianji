@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { HepanCalculator, HepanPerson } from '@/lib/hepan/calculator'
 import { HepanAnalysisService, TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createCompletion, AI_MODEL } from '@/lib/ai'
 
 
 
@@ -252,7 +252,7 @@ ${person2.name}（${person2.gender === 'male' ? '男' : '女'}）：${person2.bi
 - 字数控制在800-1200字
 - 语言流畅，条理清晰`
 
-    const completion = await ai.chat.completions.create({
+    const completion = await createCompletion({
       messages: [
         {
           role: "system",

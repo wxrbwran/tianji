@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { BaziCalculator } from '@/lib/bazi/calculator'
 import { BaziAnalysisService, TianjiPointsService } from '@/lib/database/services'
 import { handleApiError, validateEnvironment } from '@/lib/api/error-handler'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createCompletion, AI_MODEL } from '@/lib/ai'
 
 // DeepSeek AI client - 检查环境变量
 if (!validateEnvironment()) {
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
 请以详细的文本格式返回分析结果，每个维度单独成段，用【】标注维度标题。
 `
 
-      const completion = await ai.chat.completions.create({
+      const completion = await createCompletion({
         model: AI_MODEL,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,

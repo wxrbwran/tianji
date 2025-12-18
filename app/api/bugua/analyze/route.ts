@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { BuguaCalculator, BuguaQuestion } from '@/lib/bugua/calculator'
 import { TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createCompletion, AI_MODEL } from '@/lib/ai'
 
 
 
@@ -235,7 +235,7 @@ async function generateAIAnalysis(question: BuguaQuestion, result: any): Promise
 - 字数控制在600-1000字
 - 条理清晰，逻辑严密`
 
-    const completion = await ai.chat.completions.create({
+    const completion = await createCompletion({
       messages: [
         {
           role: "system",

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { validateEnvironment } from '@/lib/api/error-handler'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createCompletion, AI_MODEL } from '@/lib/ai'
 
 export async function GET() {
   try {
@@ -16,7 +16,7 @@ export async function GET() {
     // 测试 DeepSeek API 连接
 
 
-    const testCompletion = await ai.chat.completions.create({
+    const testCompletion = await createCompletion({
       model: AI_MODEL,
       messages: [{ role: 'user', content: 'Hello, respond with "OK" if you can hear me.' }],
       max_tokens: 10,

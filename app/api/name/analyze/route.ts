@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { NameAnalysisCalculator } from '@/lib/name/calculator'
 import { TianjiPointsService, AnalysisRecordsService, NameAnalysisService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createCompletion, AI_MODEL } from '@/lib/ai'
 
 
 
@@ -253,7 +253,7 @@ ${analysis.suggestions.weaknesses.join('、') || '暂无明显不足'}
 - 字数控制在600-1000字
 - 条理清晰，层次分明`
 
-    const completion = await ai.chat.completions.create({
+    const completion = await createCompletion({
       messages: [
         {
           role: "system",
