@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { HepanCalculator, HepanPerson } from '@/lib/hepan/calculator'
 import { HepanAnalysisService, TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createChatCompletion } from '@/lib/ai'
 
 
 
@@ -252,23 +252,13 @@ ${person2.name}（${person2.gender === 'male' ? '男' : '女'}）：${person2.bi
 - 字数控制在800-1200字
 - 语言流畅，条理清晰`
 
-    const completion = await ai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: "你是一位经验丰富的命理分析师，擅长八字合盘分析。你的分析客观准确，既指出优势也提醒挑战，重点是给出建设性的建议帮助改善关系。"
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      model: AI_MODEL,
-      temperature: 0.7,
-      max_tokens: 2000
-    })
-
-    return completion.choices[0]?.message?.content || '分析生成失败，请稍后重试'
+    return await createChatCompletion(
+      "你是一位经验丰富的命理分析师，擅长八字合盘分析。你的分析客观准确，既指出优势也提醒挑战，重点是给出建设性的建议帮助改善关系。",
+      prompt,
+      0.7,
+      2000,
+      '分析生成失败，请稍后重试'
+    )
 
   } catch (error) {
     console.error('AI analysis error:', error)

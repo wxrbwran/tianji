@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { BuguaCalculator, BuguaQuestion } from '@/lib/bugua/calculator'
 import { TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createChatCompletion } from '@/lib/ai'
 
 
 
@@ -235,23 +235,13 @@ async function generateAIAnalysis(question: BuguaQuestion, result: any): Promise
 - 字数控制在600-1000字
 - 条理清晰，逻辑严密`
 
-    const completion = await ai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: "你是一位专业的易经卜卦分析师，精通六十四卦的含义和应用。你的分析基于传统易经智慧，同时结合现代实际情况，为咨询者提供实用的人生指导。"
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      model: AI_MODEL,
-      temperature: 0.7,
-      max_tokens: 1500
-    })
-
-    return completion.choices[0]?.message?.content || '分析生成失败，请稍后重试'
+    return await createChatCompletion(
+      "你是一位专业的易经卜卦分析师，精通六十四卦的含义和应用。你的分析基于传统易经智慧，同时结合现代实际情况，为咨询者提供实用的人生指导。",
+      prompt,
+      0.7,
+      1500,
+      '分析生成失败，请稍后重试'
+    )
 
   } catch (error) {
     console.error('AI analysis error:', error)

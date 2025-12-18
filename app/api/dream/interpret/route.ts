@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { DreamAnalysisCalculator, DreamAnalysisInput, DreamCategory, DreamMood } from '@/lib/dream/calculator'
 import { TianjiPointsService, AnalysisRecordsService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createChatCompletion } from '@/lib/ai'
 
 
 
@@ -244,23 +244,13 @@ ${analysis.symbolic_interpretation.key_symbols.map((symbol: any) =>
 - 字数控制在800-1200字
 - 条理清晰，具有指导价值`
 
-    const completion = await ai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: "你是一位经验丰富的心理分析师和解梦专家，结合现代心理学理论与传统解梦文化，为人们提供专业的梦境解读和人生指导。你的解读既有科学依据又富有人文关怀，帮助人们更好地理解内心世界并改善生活。"
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      model: AI_MODEL,
-      temperature: 0.7,
-      max_tokens: 1800
-    })
-
-    return completion.choices[0]?.message?.content || '解读生成失败，请稍后重试'
+    return await createChatCompletion(
+      "你是一位经验丰富的心理分析师和解梦专家，结合现代心理学理论与传统解梦文化，为人们提供专业的梦境解读和人生指导。你的解读既有科学依据又富有人文关怀，帮助人们更好地理解内心世界并改善生活。",
+      prompt,
+      0.7,
+      1800,
+      '解读生成失败，请稍后重试'
+    )
 
   } catch (error) {
     console.error('AI interpretation error:', error)

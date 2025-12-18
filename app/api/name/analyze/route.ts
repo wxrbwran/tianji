@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { NameAnalysisCalculator } from '@/lib/name/calculator'
 import { TianjiPointsService, AnalysisRecordsService, NameAnalysisService } from '@/lib/database/services'
-import { ai, AI_MODEL } from '@/lib/ai'
+import { createChatCompletion } from '@/lib/ai'
 
 
 
@@ -253,23 +253,13 @@ ${analysis.suggestions.weaknesses.join('、') || '暂无明显不足'}
 - 字数控制在600-1000字
 - 条理清晰，层次分明`
 
-    const completion = await ai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: "你是一位专业的姓名学分析师，精通中华传统姓名学理论，包括五行、数理、音韵等方面。你的分析客观准确，既有深厚的文化底蕴，又结合现代实际需求，为人们提供实用的姓名指导。"
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      model: AI_MODEL,
-      temperature: 0.7,
-      max_tokens: 1500
-    })
-
-    return completion.choices[0]?.message?.content || '分析生成失败，请稍后重试'
+    return await createChatCompletion(
+      "你是一位专业的姓名学分析师，精通中华传统姓名学理论，包括五行、数理、音韵等方面。你的分析客观准确，既有深厚的文化底蕴，又结合现代实际需求，为人们提供实用的姓名指导。",
+      prompt,
+      0.7,
+      1500,
+      '分析生成失败，请稍后重试'
+    )
 
   } catch (error) {
     console.error('AI analysis error:', error)
