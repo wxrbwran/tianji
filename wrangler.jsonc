@@ -1,0 +1,69 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "sparkling-haze-13c0",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2025-12-01",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".open-next/assets"
+	},
+	"images": {
+		// Enable image optimization
+		// see https://opennext.js.org/cloudflare/howtos/image
+		"binding": "IMAGES"
+	},
+	"services": [
+		{
+			// Self-reference service binding, the service name must match the worker name
+			// see https://opennext.js.org/cloudflare/caching
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "sparkling-haze-13c0"
+		}
+	],
+	"observability": {
+		"enabled": true
+	},
+	/**
+	 * Smart Placement
+	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+	 */
+	// "placement": {  "mode": "smart" }
+	/**
+	 * Bindings
+	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+	 * databases, object storage, AI inference, real-time communication and more.
+	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+	 */
+	/**
+	 * Environment Variables
+	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+	 * Note: Use secrets to store sensitive data.
+	 * https://developers.cloudflare.com/workers/configuration/secrets/
+	 */
+	"vars": {
+		"NEXT_PUBLIC_SUPABASE_URL": "https://ruwvwowlufnzexlkuctr.supabase.co",
+		"NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1d3Z3b3dsdWZuemV4bGt1Y3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5NTM0NjgsImV4cCI6MjA4MTUyOTQ2OH0.RZcnnLyX6FZ_0wXZqQRao9JmWHh6MjgP80GoyYOYqNs",
+		"NEXT_PUBLIC_SITE_URL": "https://4a70cc3c-sparkling-haze-13c0.felix-d74.workers.dev"
+	}
+	/**
+	 * IMPORTANT: Secrets (DO NOT add API keys here)
+	 * Sensitive values like DEEPSEEK_API_KEY and ANTHROPIC_API_KEY should be set via wrangler secrets
+	 * NOT in this file to avoid committing them to version control.
+	 *
+	 * To set secrets, run:
+	 * wrangler secret put DEEPSEEK_API_KEY
+	 * wrangler secret put ANTHROPIC_API_KEY
+	 */
+}
