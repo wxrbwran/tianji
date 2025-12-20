@@ -3,7 +3,10 @@
     "allow": [
       "Bash(pnpm list:*)",
       "Bash(pnpm preview:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npx tsc:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
