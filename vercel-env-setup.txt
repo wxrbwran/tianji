@@ -19,6 +19,7 @@ NEXT_PUBLIC_SITE_URL=https://your-project-name.vercel.app
 NODE_ENV=production
 
 # 注意事项：
+
 # - 每个变量的 Environment 都要设置为 "Production" 
 # - NEXT_PUBLIC_SITE_URL 需要在首次部署后更新为实际域名
 # - 不要在变量值前后添加引号
