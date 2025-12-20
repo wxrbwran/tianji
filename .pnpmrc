@@ -1,0 +1,7 @@
+# Allow build scripts for essential dependencies
+enable-pre-post-scripts=true
+
+# Specific packages that need build scripts
+@opennextjs/cloudflare=false
+sharp=true
+esbuild=true
