@@ -79,10 +79,11 @@ export async function POST(request: NextRequest) {
 
     // 执行姓名分析
     const nameAnalysis = NameAnalysisCalculator.analyzeChineseName(body.name)
+    console.log('nameAnalysis', JSON.stringify(nameAnalysis));
 
     // 生成AI深度分析
     const aiAnalysis = await generateAIAnalysis(body, nameAnalysis)
-
+    console.log('aiAnalysis', JSON.stringify(aiAnalysis));
     // 计算服务费用（120天机点）
     const cost = 120
 

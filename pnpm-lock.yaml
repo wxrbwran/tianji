@@ -56,6 +56,15 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      cnchar:
+        specifier: ^3.2.6
+        version: 3.2.6
+      cnchar-all:
+        specifier: ^3.2.6
+        version: 3.2.6
+      cnchar-radical:
+        specifier: ^3.2.6
+        version: 3.2.6
       framer-motion:
         specifier: ^12.23.12
         version: 12.23.26(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -152,7 +161,7 @@ importers:
         version: 29.7.0
       msw:
         specifier: ^2.0.11
-        version: 2.12.4(@types/node@20.19.27)(typescript@5.9.3)
+        version: 2.12.6(@types/node@20.19.27)(typescript@5.9.3)
       postcss:
         specifier: ^8
         version: 8.5.6
@@ -2120,8 +2129,8 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  '@sindresorhus/is@7.1.1':
-    resolution: {integrity: sha512-rO92VvpgMc3kfiTjGT52LEtJ8Yc5kCWhZjLQ3LwlA4pSgPpQO7bVpYXParOD8Jwf+cVQECJo3yP/4I8aZtUQTQ==}
+  '@sindresorhus/is@7.2.0':
+    resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
     engines: {node: '>=18'}
 
   '@sinonjs/commons@3.0.1':
@@ -3170,6 +3179,18 @@ packages:
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
+
+  cnchar-all@3.2.6:
+    resolution: {integrity: sha512-v6dVZSi5frcjPDdF3kpGrl4ti490EybMdmCzHaTH0A1OerKjd8Sz6+zfYtXoQ6SE/wh52AExi56p4S+vrR1q5w==}
+
+  cnchar-radical@3.2.6:
+    resolution: {integrity: sha512-c9d9DpYoLe6zlHewrwVgfcBVTeo9LuFT7KBICeIKIxggifBCLoOaYz4jkZuh1dz6j5h9Fz6rOrrA9YnXbUBLDw==}
+
+  cnchar-types@3.2.6:
+    resolution: {integrity: sha512-LGU2ss7KcsI1Psme73+jffUX0ZDuChr6P9Rj2j8lynJHStklNpoC/+kheKSSUcXQ1u2KNvZt1Shs/5efcihHkg==}
+
+  cnchar@3.2.6:
+    resolution: {integrity: sha512-7Up5ALAkoOTAHlRMN0B7VgrrRsp6+trgFV0M7xSsZ0TwnnBfW68gXClcE9Oz8sTOEu+zqGOZjBhlHNzPIBckDA==}
 
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
@@ -4732,8 +4753,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.12.4:
-    resolution: {integrity: sha512-rHNiVfTyKhzc0EjoXUBVGteNKBevdjOlVC6GlIRXpy+/3LHEIGRovnB5WPjcvmNODVQ1TNFnoa7wsGbd0V3epg==}
+  msw@2.12.6:
+    resolution: {integrity: sha512-nGhVcHP64skBrJbn1RVO/573cq8vgoce19Ljm60xp66RDpcPrX96ik5oMf3tIIku2kc31plyI2i0vd2J6GPMVg==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -5626,8 +5647,8 @@ packages:
   ts-algebra@2.0.0:
     resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
 
-  ts-api-utils@2.1.0:
-    resolution: {integrity: sha512-CUgTZL1irw8u29bzrOD/nH85jqyc74D6SshFgujOIA7osm2Rz7dYH77agkx7H4FBNxDq7Cjf+IjaX/8zwFW+ZQ==}
+  ts-api-utils@2.2.0:
+    resolution: {integrity: sha512-L6f5oQRAoLU1RwXz0Ab9mxsE7LtxeVB6AIR1lpkZMsOyg/JXeaxBaXa/FVCBZyNr9S9I4wkHrlZTklX+im+WMw==}
     engines: {node: '>=18.12'}
     peerDependencies:
       typescript: '>=4.8.4'
@@ -8088,7 +8109,7 @@ snapshots:
   '@poppinss/dumper@0.6.5':
     dependencies:
       '@poppinss/colors': 4.1.6
-      '@sindresorhus/is': 7.1.1
+      '@sindresorhus/is': 7.2.0
       supports-color: 10.2.2
 
   '@poppinss/exception@1.2.3': {}
@@ -8508,7 +8529,7 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
-  '@sindresorhus/is@7.1.1': {}
+  '@sindresorhus/is@7.2.0': {}
 
   '@sinonjs/commons@3.0.1':
     dependencies:
@@ -9312,7 +9333,7 @@ snapshots:
       eslint: 9.39.2(jiti@1.21.7)
       ignore: 7.0.5
       natural-compare: 1.4.0
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.2.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -9354,7 +9375,7 @@ snapshots:
       '@typescript-eslint/utils': 8.50.1(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
       debug: 4.4.3
       eslint: 9.39.2(jiti@1.21.7)
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.2.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -9371,7 +9392,7 @@ snapshots:
       minimatch: 9.0.5
       semver: 7.7.3
       tinyglobby: 0.2.15
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.2.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -9854,6 +9875,20 @@ snapshots:
       - encoding
 
   clsx@2.1.1: {}
+
+  cnchar-all@3.2.6:
+    dependencies:
+      cnchar-types: 3.2.6
+
+  cnchar-radical@3.2.6:
+    dependencies:
+      cnchar-types: 3.2.6
+
+  cnchar-types@3.2.6: {}
+
+  cnchar@3.2.6:
+    dependencies:
+      cnchar-types: 3.2.6
 
   co@4.6.0: {}
 
@@ -12017,7 +12052,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.12.4(@types/node@20.19.27)(typescript@5.9.3):
+  msw@2.12.6(@types/node@20.19.27)(typescript@5.9.3):
     dependencies:
       '@inquirer/confirm': 5.1.21(@types/node@20.19.27)
       '@mswjs/interceptors': 0.40.0
@@ -13053,7 +13088,7 @@ snapshots:
 
   ts-algebra@2.0.0: {}
 
-  ts-api-utils@2.1.0(typescript@5.9.3):
+  ts-api-utils@2.2.0(typescript@5.9.3):
     dependencies:
       typescript: 5.9.3
 

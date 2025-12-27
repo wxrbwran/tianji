@@ -13,15 +13,15 @@ import { createClaudeChatCompletion as claudeChat, claude, CLAUDE_MODEL } from '
 export { ai, AI_MODEL, claude, CLAUDE_MODEL }
 
 // 通过环境变量选择 AI 提供商，默认使用 deepseek
-const AI_PROVIDER = process.env.AI_PROVIDER || 'claude'
+const AI_PROVIDER = process.env.AI_PROVIDER || 'deepseek'
 
 /**
  * 统一的 AI 聊天完成方法
  * 根据环境变量自动选择使用 DeepSeek 或 Claude
  */
-export const createChatCompletion = AI_PROVIDER === 'claude'
-  ? claudeChat
-  : deepseekChat
+export const createChatCompletion = AI_PROVIDER === 'deepseek'
+  ? deepseekChat
+  : claudeChat
 
 /**
  * 获取当前使用的 AI 提供商

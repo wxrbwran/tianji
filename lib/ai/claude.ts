@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk'
 export const CLAUDE_MODEL = "claude-sonnet-4-5-20250929"
 
 export const claude = new Anthropic({
+    baseURL: 'https://api.anthropic.com',
     apiKey: process.env.ANTHROPIC_API_KEY
 });
 

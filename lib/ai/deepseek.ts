@@ -1,9 +1,10 @@
 import OpenAI from 'openai'
 
-export const AI_MODEL = "deepseek-chat"
+export const AI_MODEL = "deepseek-ai/DeepSeek-V3.2"
 
 export const ai = new OpenAI({
-    baseURL: 'https://api.deepseek.com',
+    // baseURL: 'https://openrouter.ai/api/v1',
+    baseURL: 'https://api.siliconflow.cn/v1',
     apiKey: process.env.DEEPSEEK_API_KEY
 });
 
